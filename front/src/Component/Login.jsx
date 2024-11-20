@@ -25,7 +25,7 @@ const Login = () => {
     return (
         <div className="login">
             <div className="card">
-                <h2>Login</h2>
+                <h2>Loginnnnn</h2>
                 <form onSubmit={handleLogin}>
                     <div className="form-group">
                         <label>Username:</label>
