@@ -10,17 +10,20 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:5000/api/Auth/login", {
+            const response = await axios.post("http://localhost:5000/api/Login/login", {
                 username,
                 password,
             });
-            localStorage.setItem("token", response.data.token); // Kullanıcı bilgilerini saklayın
+            console.log("API Response:", response.data); // Yanıtı kontrol edin
+            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("user", JSON.stringify(response.data.user)); // Kullanıcı bilgilerini kaydedin
             navigate("/profile");
         } catch (error) {
             console.error("Login failed:", error);
             alert("Login failed. Please try again.");
         }
     };
+
 
     return (
         <div className="login">

@@ -1,15 +1,15 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";  // useNavigate kullanımı
-// Profile.jsx olarak adlandırıyoruz
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-    const navigate = useNavigate();  // useNavigate hook'u
+    const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user"));
 
     // Kullanıcı bilgisi yoksa login sayfasına yönlendir
+   
+    // Kullanıcı bilgisi yoksa herhangi bir şey render etme
     if (!user) {
-        navigate("/");  // Kullanıcı bilgisi yoksa login sayfasına yönlendiriyoruz
-        return null;  // Kullanıcı bilgisi yoksa render etmiyoruz
+        return null;
     }
 
     const handleLogout = () => {
@@ -18,7 +18,7 @@ const Profile = () => {
         localStorage.removeItem("user");
 
         // Kullanıcıyı login sayfasına yönlendir
-        navigate("/");  // Kullanıcı logout olduktan sonra login sayfasına yönlendirme
+        navigate("/");
     };
 
     return (

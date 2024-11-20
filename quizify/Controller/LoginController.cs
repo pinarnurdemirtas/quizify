@@ -11,12 +11,12 @@ namespace quizify.Controller
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController : ControllerBase
+    public class LoginController : ControllerBase
     {
         private readonly QuizifyDbContext _context;
         private readonly JwtSettings _jwtSettings;
 
-        public AuthController(QuizifyDbContext context, JwtSettings jwtSettings)
+        public LoginController(QuizifyDbContext context, JwtSettings jwtSettings)
         {
             _context = context;
             _jwtSettings = jwtSettings;
