@@ -13,6 +13,7 @@ namespace quizify.Controller
     {
         private readonly QuizifyDbContext _context;
 
+        //TEST
         public RegisterController(QuizifyDbContext context)
         {
             _context = context;
