@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import "./login.css"
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -17,7 +18,7 @@ const Login = () => {
             console.log("API Response:", response.data); // Yanıtı kontrol edin
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("user", JSON.stringify(response.data.user)); // Kullanıcı bilgilerini kaydedin
-            navigate("/profile");
+            navigate("/home");
         } catch (error) {
             console.error("Login failed:", error);
             alert("Login failed. Please try again.");
