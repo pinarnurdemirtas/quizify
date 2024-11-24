@@ -1,61 +1,75 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
-import "./login.css"
+import { Link } from "react-router-dom";
+import "./Login.css";
 
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const navigate = useNavigate();
+    const [error, setError] = useState(null);
 
     const handleLogin = async (e) => {
         e.preventDefault();
+
+        const loginData = {
+            username,
+            password,
+        };
+
         try {
-            const response = await axios.post("http://localhost:5000/api/Login/login", {
-                username,
-                password,
+            const response = await fetch("http://localhost:5000/api/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(loginData),
             });
-            console.log("API Response:", response.data); // Yanıtı kontrol edin
-            localStorage.setItem("token", response.data.token);
-            localStorage.setItem("user", JSON.stringify(response.data.user)); // Kullanıcı bilgilerini kaydedin
-            navigate("/home");
-        } catch (error) {
-            console.error("Login failed:", error);
-            alert("Login failed. Please try again.");
+
+            if (!response.ok) {
+                throw new Error("Invalid username or password");
+            }
+
+            const data = await response.json();
+            alert(`Welcome, ${data.User.name}!`);
+        } catch (err) {
+            setError(err.message);
         }
     };
 
-
     return (
-        <div className="login">
-            <div className="card">
-                <h2>Login</h2>
-                <form onSubmit={handleLogin}>
-                    <div className="form-group">
-                        <label>Username:</label>
+        <div className="login-container">
+            <div className="login-card">
+                <div className="login-form">
+                    <h1 className="login-title">Login</h1>
+ 
+                    {error && <div className="error-message">{error}</div>}
+
+                    <form onSubmit={handleLogin}>
                         <input
                             type="text"
+                            placeholder="Username"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            required
+                            className="input-field"
                         />
-                    </div>
-                    <div className="form-group">
-                        <label>Password:</label>
                         <input
                             type="password"
+                            placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            required
+                            className="input-field"
                         />
-                    </div>
-                    <button type="submit" className="button">
-                        Login
-                    </button>
-                </form>
-                <p>
-                    Don't have an account? <Link to="/register">Register here</Link>
-                </p>
+
+                        <button type="submit" className="login-button">Sign In</button>
+                    </form>
+
+
+                    <p className="sign-up">
+                        Don't have an account? <Link to="/signup" className="sign-up-link">Sign Up</Link>
+                    </p>
+                </div>
+
+                <div className="info-section">
+                </div>
             </div>
         </div>
     );
