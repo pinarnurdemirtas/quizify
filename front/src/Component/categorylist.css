@@ -1,0 +1,38 @@
+.categories-container {
+    width: 200px;
+    background: #f4f4f4;
+    padding: 10px;
+    height: 100vh;
+    overflow-y: auto;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.category-container {
+    margin-bottom: 10px;
+}
+
+.category-button {
+    width: 100%;
+    height: 68px;
+    text-align: left;
+    padding: 8px;
+    border: none;
+    background: rgba(216, 214, 216, 0.44);
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.category-button:hover {
+    background-color: #ddd;
+}
+
+.leaf-category .leaf-button {
+    font-weight: bold;
+    color: #455bc5;
+}
+
+.subcategories-container {
+    padding-left: 15px;
+    margin-top: 5px;
+}

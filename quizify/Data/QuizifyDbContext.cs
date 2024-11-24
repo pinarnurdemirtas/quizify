@@ -11,6 +11,11 @@ namespace quizify.Data
 
         // Veritabanı tabloları
         public DbSet<Kisi> users { get; set; }
-        
+        public DbSet<Categories> categories { get; set; }
+        public DbSet<Question> questions { get; set; }
+        public DbSet<Test> testquestions { get; set; }
+        public DbSet<Exam> exam_questions { get; set; }
+
+
     }
 }

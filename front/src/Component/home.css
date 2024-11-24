@@ -1,0 +1,63 @@
+/* Genel sayfa stili */
+.homepage-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    background-color: #f8f9fa; /* Hafif gri arka plan */
+    overflow-y: hidden; /* Yatay taşmayı kapat */
+
+}
+
+.app-title {
+    flex-grow: 1;
+    font-weight: bold;
+}
+
+/* İçerik konteyneri */
+.content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+/* Ana içerik stili */
+.content-container {
+    text-align: center;
+    max-width: 400px;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.questions-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.questions-content {
+    flex: 1; /* Kalan alanı doldur */
+    margin-left: 16px; /* Aradaki boşluk için */
+    box-sizing: border-box;
+}
+
+.categories {
+    width: 250px; /* Yan menünün genişliği sabit */
+    box-sizing: border-box;
+}
+
+
+
+/* Button hover efektleri */
+button {
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}

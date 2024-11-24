@@ -4,7 +4,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh; /* Ekran yüksekliğine uyum sağlar */
   background-color: #f4f4f4;
 }
 
@@ -12,67 +12,14 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh; /* Yüksekliği dinamik yap */
   width: 100%;
   background-color: #f4f4f9;
   font-family: Arial, sans-serif;
 }
-
-.card {
-  background: #ffffff;
-  border-radius: 15px; /* Kenarlar yumuşatıldı */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Hafif gölge */
-  padding: 30px; /* Kart iç boşluğu her tarafta eşit */
-  max-width: 500px; /* Kart genişliği ayarlandı */
-  width: calc(100% - 5px); /* Ekran daraldığında kenarlarda yer bırakır */
-  text-align: center;
-  margin: 0 auto; /* Merkeze hizalama sağlandı */
-  box-sizing: border-box; /* Padding, genişliğe doğru dahil edildi */
-}
-
-h2 {
-  margin-bottom: 25px;
-  color: #333333;
-  font-size: 24px; /* Daha büyük başlık yazısı */
-}
-
-.form-group {
-  margin-bottom: 20px; /* Form elemanları arasına daha fazla boşluk */
-  text-align: left;
-}
-
-label {
-  display: block;
-  margin-bottom: 8px; /* Daha fazla alt boşluk */
-  font-weight: bold;
-}
-
-input {
+html, body {
+  margin: 0;
+  padding: 0;
   width: 100%;
-  padding: 10px; /* Daha fazla iç boşluk */
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  outline: none;
-  font-size: 15px; /* Yazı boyutu artırıldı */
-  box-sizing: border-box; /* Padding genişliğe dahil edildi */
-}
-
-input:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Fokus efekti daha belirgin */
-}
-
-.button {
-  background-color: #007bff;
-  color: white;
-  padding: 12px 20px; /* Daha büyük butonlar */
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.button:hover {
-  background-color: #0056b3;
+  overflow-x: hidden; /* Yatay taşmayı kapat */
 }
