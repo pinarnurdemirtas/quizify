@@ -1,0 +1,178 @@
+﻿/* Genel ayarlar */
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #6e8efb, #a777e3); /* Daha modern gradyan */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+/* Login Container */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px; /* Genişlik arttı */
+    height: auto;
+    padding: 0;
+    margin: 0;
+}
+
+/* Login Card */
+.login-card {
+    display: flex;
+    flex-direction: row;
+    background: transparent;
+    border-radius: 20px; /* Daha yuvarlak köşeler */
+    overflow: hidden;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); /* Derinlik ekledik */
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+/* Login Form */
+.login-form {
+    flex: 3.7;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+}
+
+/* Login Başlık */
+.login-title {
+    font-size: 36px; /* Başlık büyütüldü */
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #6e8efb;
+    text-transform: uppercase; /* Başlık yazısı büyük harf */
+    text-align: center; /* Ortala */
+}
+
+/* Alt Başlık */
+.login-subtitle {
+    color: #7a7a7a;
+    margin-bottom: 30px; /* Daha fazla boşluk */
+    text-align: center; /* Ortala */
+}
+
+/* Input Alanı */
+.input-field {
+    width: 100%;
+    padding: 14px;
+    margin: 12px 0;
+    border: 1px solid #ddd;
+    border-radius: 12px; /* Yuvarlak köşeler */
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+/* Input alanı odaklandığında */
+.input-field {
+    background-color: #b3d9ff;
+    border: 1px solid #99b3cc;
+}
+
+
+
+
+
+/* Login Butonu */
+.login-button {
+    width: 80%;
+    padding: 14px;
+    margin-top: 20px;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+    /* Buton hover efekti */
+    .login-button:hover {
+        background: linear-gradient(135deg, #5e7ceb, #9068e3);
+        transform: translateY(-5px); /* Hoverda yukarı kayma efekti */
+    }
+
+/* Forgot Password ve Sign Up */
+.forgot-password,
+.sign-up {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #4a4a4a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Sign Up Link */
+.sign-up-link {
+    text-align: center;
+    color: #6e8efb;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+    .sign-up-link:hover {
+        color: #4a6ff1; /* Hover efektiyle renk değişimi */
+    }
+
+/* Error Mesajı */
+.error-message {
+    color: #e74c3c;
+    background: #fdecea;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Info Section */
+.info-section {
+    flex: 1;
+    background: linear-gradient(135deg, #a777e3, #6e8efb);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); /* Daha derin bir gölge */
+}
+
+/* Hover Efekti */
+.input-field {
+    background-color: #f2f2f2; /* Gri bir arka plan */
+    color: #000; /* Yazı rengi siyah olacak */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 13px;
+    padding: 12px;
+    margin: 10px 0;
+}
+
+    /* Focus olduğunda yazı rengi yine siyah kalır */
+    .input-field:focus {
+        background-color: #f2f2f2; /* Arka plan değişmez */
+        color: #000; /* Yazı rengi siyah kalır */
+        border-color: #6e8efb; /* Focus durumunda kenar rengi mavi */
+        box-shadow: 0 0 8px rgba(110, 142, 251, 0.5);
+    }
