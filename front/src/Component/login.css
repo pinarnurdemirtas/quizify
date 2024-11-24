@@ -12,26 +12,14 @@ body {
     transition: all 0.3s ease;
 }
 
-/* Login Container */
-.login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    max-width: 1200px; /* Genişlik arttı */
-    height: auto;
-    padding: 0;
-    margin: 0;
-}
 
 /* Login Card */
 .login-card {
     display: flex;
     flex-direction: row;
-    background: transparent;
     border-radius: 20px; /* Daha yuvarlak köşeler */
     overflow: hidden;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); /* Derinlik ekledik */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5); /* Derinlik ekledik */
     width: 100%;
     padding: 0;
     margin: 0;
@@ -51,7 +39,7 @@ body {
 
 /* Login Başlık */
 .login-title {
-    font-size: 36px; /* Başlık büyütüldü */
+    font-size: 34px; /* Başlık büyütüldü */
     font-weight: 700;
     margin-bottom: 10px;
     color: #6e8efb;
@@ -83,13 +71,9 @@ body {
     border: 1px solid #99b3cc;
 }
 
-
-
-
-
 /* Login Butonu */
 .login-button {
-    width: 80%;
+    width: 94%;
     padding: 14px;
     margin-top: 20px;
     background: linear-gradient(135deg, #6e8efb, #a777e3);
@@ -147,19 +131,19 @@ body {
 /* Info Section */
 .info-section {
     flex: 1;
-    background: linear-gradient(135deg, #a777e3, #6e8efb);
-    color: white;
+    background: linear-gradient(135deg, #c294fb, #6e8efb);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 50px;
-    border-radius: 20px;
+    border-radius: 15px;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); /* Daha derin bir gölge */
 }
 
 /* Hover Efekti */
 .input-field {
+    width: 88%;
     background-color: #f2f2f2; /* Gri bir arka plan */
     color: #000; /* Yazı rengi siyah olacak */
     border: 1px solid #ddd;

@@ -8,15 +8,7 @@ body {
   background-color: #f4f4f4;
 }
 
-.app {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh; /* Yüksekliği dinamik yap */
-  width: 100%;
-  background-color: #f4f4f9;
-  font-family: Arial, sans-serif;
-}
+
 html, body {
   margin: 0;
   padding: 0;

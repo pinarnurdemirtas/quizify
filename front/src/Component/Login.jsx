@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -16,7 +17,7 @@ const Login = () => {
         };
 
         try {
-            const response = await fetch("http://localhost:5000/api/auth/login", {
+            const response = await fetch("http://localhost:5000/api/Login/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -29,47 +30,54 @@ const Login = () => {
             }
 
             const data = await response.json();
-            alert(`Welcome, ${data.User.name}!`);
+
+            // Check the data in the console for debugging
+            console.log("Login successful:", data);
+
+            // Store the token in localStorage (or sessionStorage depending on your needs)
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("user", JSON.stringify(data.user));
+
+            // Redirect to home page after successful login
+            alert(`Welcome, ${data.user.name}!`);
+            navigate("/home");  // Or use: window.location.href = "/home" for an alternative method
+
         } catch (err) {
             setError(err.message);
         }
     };
 
     return (
-        <div className="login-container">
-            <div className="login-card">
-                <div className="login-form">
-                    <h1 className="login-title">Login</h1>
- 
-                    {error && <div className="error-message">{error}</div>}
+        <div className="login-card">
+            <div className="login-form">
+                <h1 className="login-title">Login</h1>
+                {error && <div className="error-message">{error}</div>}
 
-                    <form onSubmit={handleLogin}>
-                        <input
-                            type="text"
-                            placeholder="Username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            className="input-field"
-                        />
-                        <input
-                            type="password"
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="input-field"
-                        />
+                <form onSubmit={handleLogin}>
+                    <input
+                        type="text"
+                        placeholder="Username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        className="input-field"
+                    />
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="input-field"
+                    />
+                    <button type="submit" className="login-button">Sign In</button>
+                </form>
 
-                        <button type="submit" className="login-button">Sign In</button>
-                    </form>
+                <p className="sign-up">
+                    Don't have an account? <Link to="/signup" className="sign-up-link">Sign Up</Link>
+                </p>
+            </div>
 
-
-                    <p className="sign-up">
-                        Don't have an account? <Link to="/signup" className="sign-up-link">Sign Up</Link>
-                    </p>
-                </div>
-
-                <div className="info-section">
-                </div>
+            <div className="info-section">
+                {/* Any other content can go here */}
             </div>
         </div>
     );
