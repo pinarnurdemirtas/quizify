@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Login from "./Component/Login.jsx";
 import Profile from "./Component/Profile.jsx";
 import Register from "./Component/Register.jsx";
-import CategoryList from "./Component/CategoryList.jsx";
 import Questions from "./Component/Questions.jsx"
 import Home from "./Component/HomePage.jsx";
 import "./App.css"

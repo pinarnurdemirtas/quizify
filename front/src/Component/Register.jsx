@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import "./register.css"; // Eğer ayrı bir CSS dosyası varsa
 
 const Register = () => {
     const [name, setName] = useState("");
@@ -8,83 +9,89 @@ const Register = () => {
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
     const handleRegister = async (e) => {
         e.preventDefault();
+
+        const registerData = {
+            name,
+            surname,
+            email,
+            username,
+            password,
+        };
+
         try {
-            await axios.post("http://localhost:5000/api/Register/Register", {
-                name,
-                surname,
-                email,
-                username,
-                password,
-            });
-            alert("Registration successful! You can now log in.");
-            navigate("/"); // Kayıt başarılıysa login ekranına yönlendir
+            const response = await axios.post(
+                "http://localhost:5000/api/Register/Register",
+                registerData
+            );
+
+            if (response.status === 200) {
+                alert("Registration successful! You can now log in.");
+                navigate("/"); // Kayıt başarılıysa login ekranına yönlendir
+            }
         } catch (error) {
+            setError("Registration failed. Please try again.");
             console.error("Registration failed:", error);
-            alert("Registration failed. Please try again.");
         }
     };
 
     return (
-        <div className="register">
-            <div className="card">
-                <h2>Register</h2>
+        <div className="register-card">
+            <div className="register-form">
+                <h1 className="register-title">Register</h1>
+                {error && <div className="error-message">{error}</div>}
+
                 <form onSubmit={handleRegister}>
-                    <div className="form-group">
-                        <label>Name:</label>
-                        <input
-                            type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Surname:</label>
-                        <input
-                            type="text"
-                            value={surname}
-                            onChange={(e) => setSurname(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Email:</label>
-                        <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Username:</label>
-                        <input
-                            type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Password:</label>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <button type="submit" className="button">
-                        Register
-                    </button>
+                    <input
+                        type="text"
+                        placeholder="Name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="input-field"
+                        required
+                    />
+                    <input
+                        type="text"
+                        placeholder="Surname"
+                        value={surname}
+                        onChange={(e) => setSurname(e.target.value)}
+                        className="input-field"
+                        required
+                    />
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="input-field"
+                        required
+                    />
+                    <input
+                        type="text"
+                        placeholder="Username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        className="input-field"
+                        required
+                    />
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="input-field"
+                        required
+                    />
+                    <button type="submit" className="register-button">Sign Up</button>
                 </form>
+
             </div>
         </div>
     );
 };
 
-export default Register;
+export default Register;
