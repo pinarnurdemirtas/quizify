@@ -1,63 +1,52 @@
-/* Genel stil ayarları */
-body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #6e8efb, #a777e3);
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    height: 100vh;
-    overflow: hidden;
-    align-items: center;
-    height: 100vh;
-    transition: all 0.3s ease;
-}
-
-/* Kart görünümü */
 .register-card {
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 400px;
-    padding: 20px 30px;
+    margin: 50px auto;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    background-color: #fff;
 }
 
+.register-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-/* Başlık */
 .register-title {
     font-size: 34px; /* Başlık büyütüldü */
     font-weight: 700;
     margin-bottom: 10px;
     color: #6e8efb;
     text-transform: uppercase; /* Başlık yazısı büyük harf */
-    text-align: center
+    text-align: center; /* Ortala */
 }
 
-/* Form alanı */
-.register-form form {
+.error-message {
+    color: red;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.input-pair {
     display: flex;
-    flex-direction: column;
-}
-
-/* Input alanı */
-.input-field {
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    justify-content: space-between;
+    width: 100%;
     margin-bottom: 15px;
-    transition: all 0.3s ease;
 }
 
-.input-field:focus {
-    border-color: #007bff;
-    outline: none;
+.input-field {
+    width: 48%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
 }
 
-/* Buton */
 .register-button {
-    width: 94%;
-    padding: 14px;
+    width: 100%;
+    padding: 10px;
     margin-top: 20px;
     background: linear-gradient(135deg, #6e8efb, #a777e3);
     color: white;
@@ -69,32 +58,7 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.login-button:hover {
+.register-button:hover {
     background: linear-gradient(135deg, #5e7ceb, #9068e3);
-    transform: translateY(-5px); /* Hoverda yukarı kayma efekti */
-}
-
-/* Hata mesajı */
-.error-message {
-    color: red;
-    font-size: 14px;
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-/* Login yönlendirme */
-.login-link {
-    text-align: center;
-    margin-top: 15px;
-    font-size: 14px;
-}
-
-.login-link-text {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.login-link-text:hover {
-    text-decoration: underline;
+    transform: translateY(-5px); /* Hoverda yukarı kayma efekti */
 }
