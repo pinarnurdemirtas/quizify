@@ -84,7 +84,7 @@ function Questions({ categoryId, handleAddToCart }) {
             <Divider sx={{ marginY: 2 }} />
             {selectedCategory && categorizedQuestions[selectedCategory].length > 0 && (
                 <div>
-                    <Box>
+                    <Box sx={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}>
                         {categorizedQuestions[selectedCategory].map((question) => (
                             <Box key={question.id} sx={{ marginBottom: 3 }}>
                                 <Paper elevation={5} sx={{ borderRadius: '16px', overflow: 'hidden' }}>
@@ -121,6 +121,7 @@ function Questions({ categoryId, handleAddToCart }) {
                             </Box>
                         ))}
                     </Box>
+
                 </div>
             )}
         </div>
