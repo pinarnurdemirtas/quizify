@@ -4,12 +4,16 @@ using Microsoft.IdentityModel.Tokens;
 using quizify.Data;
 using quizify.Helpers;
 using System.Text;
+using quizify.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Veritabanı bağlamını ekle
 builder.Services.AddDbContext<QuizifyDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+builder.Services.AddScoped<PdfService>();
 
 // JWT ayarlarını yükle
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();

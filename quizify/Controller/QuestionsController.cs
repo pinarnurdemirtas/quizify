@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using quizify.Data;
@@ -20,6 +21,7 @@ namespace quizify.Controller
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Question>>> GetQuestionsByCategory([FromQuery] int category)
         {
+
             var questions = await _context.questions
                 .Where(q => q.category_id == category)
                 .ToListAsync();

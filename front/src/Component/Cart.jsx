@@ -1,24 +1,130 @@
-import React from 'react';
-import { Drawer, Card, CardContent, Typography, List, ListItem, IconButton, ListItemSecondaryAction, Button } from '@mui/material';
+import React, { useState } from 'react';
+import { Drawer, Card, CardContent, Typography, List, ListItem, IconButton, ListItemSecondaryAction, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import axios from 'axios'; // Import axios
 import DeleteIcon from '@mui/icons-material/Delete';
-import CloseIcon from '@mui/icons-material/Close';  // Çarpı simgesini ekliyoruz
+import CloseIcon from '@mui/icons-material/Close';
+import jsPDF from 'jspdf';
+import DejaVuSans from '../assets/Fonts/DejaVuSans.ttf'; // Fontları doğru şekilde yüklemek için
 
 function Cart({ cartItems, open, onClose, onRemove, onComplete }) {
+    const [openModal, setOpenModal] = useState(false);  // Modal açma/kapama durumunu kontrol etmek için
+    const [examName, setExamName] = useState('');  // Kullanıcının girdiği sınav adı
 
-    // Sepet öğelerini konsola yazdıracak fonksiyon
     const handleComplete = () => {
-        // Sepetteki öğeleri konsola yazdırıyoruz
-        console.log("Sepetteki Sorular:", cartItems);
-        // onComplete fonksiyonu varsa çalıştırıyoruz
-        if (onComplete) {
-            onComplete();
+        if (!examName) {
+            alert('Lütfen sınav adını girin.');
+            return;
+        }
+
+        const doc = new jsPDF();
+
+        // Türkçe karakter desteği için fontu yükleyin
+        doc.addFont(DejaVuSans, 'DejaVu', 'normal');
+        doc.setFont('DejaVu'); // Burada fontu kullanıyoruz
+
+        doc.setFontSize(18);
+        doc.setTextColor(40, 40, 40);
+        doc.text("Sınav Soruları", 105, 20, { align: "center" });
+
+        let currentY = 40;
+        const pageHeight = doc.internal.pageSize.height;
+
+        const marginLeft = 10;
+        const marginRight = 10;
+        const maxWidth = doc.internal.pageSize.width - marginLeft - marginRight; // Sayfa genişliği
+
+        const examQuestions = []; // Array to store exam questions
+        cartItems.forEach((item, index) => {
+            doc.setFontSize(14);
+            doc.setTextColor(0, 0, 0);
+
+            // Soruları eklerken, satıra sığmadığında yeni sayfaya geçmesini sağlamak
+            const itemText = `${index + 1}. ${item.text}`;
+            if (currentY + 10 > pageHeight - 20) {
+                doc.addPage();
+                currentY = 20; // Yeni sayfada yazının başladığı yer
+            }
+
+            // Metni sığdırmak için doc.text'in genişliğini kontrol edin
+            doc.text(itemText, marginLeft, currentY, { maxWidth: maxWidth });
+            currentY += 10;
+
+            // Store the question in examQuestions array
+            examQuestions.push({
+                question_id: item.id,
+                exam_id: 0, // You can update this when creating the exam in the database
+                created_at: new Date().toISOString()
+            });
+
+            if (item.options && Array.isArray(item.options) && item.options.some(opt => opt !== undefined)) {
+                item.options.forEach((option, optionIndex) => {
+                    if (option !== undefined) {
+                        const optionText = `${String.fromCharCode(65 + optionIndex)}. ${option}`;
+                        if (currentY + 8 > pageHeight - 20) {
+                            doc.addPage();
+                            currentY = 20;
+                        }
+                        doc.text(optionText, marginLeft + 10, currentY, { maxWidth: maxWidth - 10 }); // Option'ları sığdırıyoruz
+                        currentY += 8;
+                    }
+                });
+            } else {
+                const noOptionText = '';
+                if (currentY + 8 > pageHeight - 20) {
+                    doc.addPage();
+                    currentY = 20;
+                }
+                doc.setFontSize(12);
+                doc.setTextColor(150, 150, 150);
+                doc.text(noOptionText, marginLeft, currentY, { maxWidth: maxWidth });
+                currentY += 10;
+            }
+            currentY += 10;
+        });
+
+        // Save the PDF document
+        doc.save("sinav_sorulari.pdf");
+
+        // Get user_id from localStorage
+        const user = JSON.parse(localStorage.getItem("user"));
+        const user_id = user ? user.id : null; // Ensure user is available
+
+        if (user_id) {
+            // Create the exam data object
+            const examData = {
+                exam: {
+                    id: 0, // This will be assigned later by the database
+                    user_id: user_id, // Use the logged-in user's ID
+                    name: examName, // Kullanıcının girdiği sınav adı
+                    pdf_url: "path/to/pdf", // You can provide the URL or path where the PDF is saved
+                    created_at: new Date().toISOString()
+                },
+                examQuestions: examQuestions
+            };
+
+            console.log('Sending exam data:', examData);  // Log the data
+            setExamName('');  // Modal içini temizle
+            setOpenModal(false); // Close the modal on success
+            axios.post('http://localhost:5000/api/Exam', examData)
+                .then(response => {
+                    console.log('Exam saved successfully:', response.data);
+                })
+                .catch(error => {
+                    console.error('There was an error saving the exam:', error.response?.data || error.message);
+                });
+
+        } else {
+            console.error("User is not logged in.");
         }
     };
+
+    const handleOpenModal = () => setOpenModal(true);
+    const handleCloseModal = () => setOpenModal(false);
+    const handleExamNameChange = (event) => setExamName(event.target.value);
 
     return (
         <Drawer anchor="right" open={open} onClose={onClose}>
             <div style={{ width: 350, padding: 20 }}>
-                {/* Çarpı simgesini üst sağ köşeye yerleştiriyoruz */}
                 <IconButton
                     onClick={onClose}
                     color="inherit"
@@ -38,12 +144,9 @@ function Cart({ cartItems, open, onClose, onRemove, onComplete }) {
                                     <Typography variant="body1" gutterBottom>
                                         {item.text}
                                     </Typography>
-
-                                    {/* Eğer şıklar varsa ve undefined değilse, sadece Test sorularında göster */}
-                                    {item.options && Array.isArray(item.options) && item.options.length > 0 ? (
+                                    {item.options && Array.isArray(item.options) && item.options.some(opt => opt !== undefined) ? (
                                         <List>
                                             {item.options.map((option, index) => (
-                                                // undefined değerlerini kontrol ediyoruz
                                                 option !== undefined ? (
                                                     <ListItem key={index} style={{ paddingLeft: '0' }}>
                                                         <Typography variant="body2">
@@ -54,15 +157,11 @@ function Cart({ cartItems, open, onClose, onRemove, onComplete }) {
                                             ))}
                                         </List>
                                     ) : (
-                                        // Şık olmayan sorularda sadece text'i göster
                                         <Typography variant="body2" color="textSecondary">
-                                            Şıklar mevcut değil.
                                         </Typography>
                                     )}
                                 </CardContent>
                             </Card>
-
-                            {/* Çöp ikonunu sağ tarafa yerleştiriyoruz */}
                             <ListItemSecondaryAction>
                                 <IconButton onClick={() => onRemove(item.id)} color="error">
                                     <DeleteIcon />
@@ -72,15 +171,39 @@ function Cart({ cartItems, open, onClose, onRemove, onComplete }) {
                     ))}
                 </List>
 
-                {/* Sepeti Tamamla butonunu altta yerleştiriyoruz */}
                 <Button
                     variant="contained"
                     sx={{ backgroundColor: "#94a4fa", color: "black", width: '100%', marginTop: '20px' }}
-                    onClick={handleComplete}  // onComplete yerine handleComplete fonksiyonunu kullanıyoruz
+                    onClick={handleOpenModal}  // Modal'ı aç
                 >
                     Sınav Oluştur
                 </Button>
             </div>
+
+            {/* Modal - Sınav Adı Girme */}
+            <Dialog open={openModal} onClose={handleCloseModal}>
+                <DialogTitle>Sınav Adı Belirle</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="exam-name"
+                        label="Sınav Adı"
+                        type="text"
+                        fullWidth
+                        value={examName}
+                        onChange={handleExamNameChange}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseModal} color="primary">
+                        İptal
+                    </Button>
+                    <Button onClick={handleComplete} color="primary">
+                        Oluştur
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Drawer>
     );
 }

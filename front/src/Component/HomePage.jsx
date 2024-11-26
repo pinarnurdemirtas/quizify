@@ -7,6 +7,7 @@ import Profile from "./Profile";
 import Questions from "./Questions";
 import Cart from "./Cart";
 import "./home.css";
+import Exams from "./Exams.jsx";
 
 const HomePage = () => {
     const [currentPage, setCurrentPage] = useState("questions");
@@ -20,6 +21,7 @@ const HomePage = () => {
 
     const handleLogout = () => {
         console.log("Logged out");
+        localStorage.removeItem("token");
         window.location.href = "/login";
     };
 
@@ -63,12 +65,7 @@ const HomePage = () => {
                     </div>
                 );
             case "exams":
-                return (
-                    <div className="content-container">
-                        <h1>Sınavlar</h1>
-                        <p>Burada sınavlarınızı görebilirsiniz.</p>
-                    </div>
-                );
+                return <Exams />;
             case "profile":
                 return <Profile />;
             case "questions":
