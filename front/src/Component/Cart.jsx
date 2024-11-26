@@ -24,9 +24,17 @@ function Cart({ cartItems, open, onClose, onRemove, onComplete }) {
 
         doc.setFontSize(18);
         doc.setTextColor(40, 40, 40);
-        doc.text("Sınav Soruları", 105, 20, { align: "center" });
+        // "Ad Soyad" metnini sağa hizalayarak ekliyoruz
+        doc.text(`Ad Soyad: `, 50, 10, { align: "right" });
 
-        let currentY = 40;
+// "Numara" metnini sola hizalayarak ekliyoruz
+        doc.text(`Numara: `, 120, 10, { align: "left" }); // Y pozisyonunu 40 yaparak aralarına boşluk ekledik
+
+// "Sınav Soruları" başlığını merkeze hizalayarak daha aşağıya ekliyoruz
+        doc.text(` ${examName} Sınav Soruları`, 105, 30, { align: "center" }); // Y pozisyonunu 60 yaparak başlığı daha aşağıya yerleştiriyoruz
+
+
+        let currentY = 50;
         const pageHeight = doc.internal.pageSize.height;
 
         const marginLeft = 10;
