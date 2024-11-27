@@ -22,6 +22,7 @@ namespace quizify.Controller
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] Kisi kisi)
         {
+            // Kullanıcı adı ve email kontrolleri
             if (_context.Set<Kisi>().Any(k => k.username == kisi.username))
             {
                 return BadRequest("Kullanıcı adı zaten kullanılıyor.");
@@ -30,6 +31,7 @@ namespace quizify.Controller
             {
                 return BadRequest("Email zaten kullanılıyor.");
             }
+
             // Şifreyi hash'le
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(kisi.password);
             kisi.password = passwordHash;
@@ -41,6 +43,7 @@ namespace quizify.Controller
 
             return Ok("Kullanıcı başarıyla kaydedildi.");
         }
+
     
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(int id)

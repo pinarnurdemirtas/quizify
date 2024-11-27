@@ -1,27 +1,61 @@
-.profile-card {
-    max-width: 400px;
-    width: 100%;
-    background-color: #fff;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    border-radius: 12px;
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
     padding: 20px;
-    text-align: center;
 }
 
-.profile-title {
-    font-size: 24px;
-    font-weight: bold;
-    color: #2d3436;
+.profile-card {
+    width: 100%;
+    max-width: 800px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    padding: 20px;
+}
+
+.profile-header {
+    display: flex;
+    justify-content: center;
     margin-bottom: 20px;
 }
 
-.profile-info {
-    margin: 10px 0;
-    font-size: 16px;
-    color: #636e72;
+.profile-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 3px solid #3f454a; /* Profil fotoğrafı etrafında mavi bir çerçeve */
 }
 
-.profile-info strong {
-    color: #2d3436;
-    font-weight: 600;
+.profile-detail {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.profile-detail .MuiTypography-h6 {
+    font-weight: bold;
+    color: #555;
+}
+
+.profile-detail .MuiTypography-body1 {
+    font-size: 16px;
+    color: #333;
+}
+
+.edit-icon {
+    color: #404a55;
+    transition: color 0.3s ease;
+}
+
+.edit-icon:hover {
+    color: #004ba0;
+}
+
+@media (max-width: 600px) {
+    .profile-card {
+        width: 100%;
+    }
 }

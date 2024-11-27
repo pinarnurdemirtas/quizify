@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./Register.css"; // Eğer ayrı bir CSS dosyası varsa
+import "./Register.css"; // CSS dosyanız varsa
 
 const Register = () => {
     const [name, setName] = useState("");
@@ -18,30 +18,40 @@ const Register = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
 
-        const registerData = {
+        // Conditionally set the image URL based on gender
+        const img =
+            gender === "male"
+                ? "https://api.dicebear.com/8.x/adventurer/svg?seed=Cuddles&flip=true"
+                : gender === "female"
+                    ? "https://api.dicebear.com/8.x/adventurer/svg?seed=Cookie&flip=true"
+                    : ""; // You can add a default or blank image for "other" or empty selection
+
+        const payload = {
             name,
             surname,
             email,
-            department,
             username,
             password,
-            gender,
             phone,
+            department,
+            gender,
+            img,
         };
-
+        console.log(payload); // Log to check data
         try {
-            const response = await axios.post(
-                "http://localhost:5000/api/Register/Register",
-                registerData
-            );
-
-            if (response.status === 200) {
-                alert("Registration successful! You can now log in.");
-                navigate("/"); // Kayıt başarılıysa login ekranına yönlendir
-            }
+            const response = await axios.post('http://localhost:5000/api/Register/Register', payload);
+            // handle success
+            console.log('Registration successful:', response.data);
+            // Optionally, you can redirect the user after successful registration
+            navigate("/somePath"); // Change to the appropriate route
         } catch (error) {
-            setError("Registration failed. Please try again.");
-            console.error("Registration failed:", error);
+            console.error('Registration failed:', error.message);
+
+            if (error.response && error.response.data && error.response.data.errors) {
+                console.error('Validation Errors:', error.response.data.errors);
+            } else {
+                console.error('Error details:', error.response);
+            }
         }
     };
 
@@ -130,10 +140,9 @@ const Register = () => {
 
                     <button type="submit" className="register-button">Sign Up</button>
                 </form>
-
             </div>
         </div>
     );
 };
 
-export default Register;
+export default Register;

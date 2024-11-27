@@ -6,6 +6,7 @@ using quizify.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using BCrypt.Net; // BCrypt kütüphanesi için ekleme
 
 namespace quizify.Controller
 {
@@ -27,11 +28,12 @@ namespace quizify.Controller
         public IActionResult Login([FromBody] Login loginUser)
         {
             // Kullanıcıyı veritabanında bul
-            var user = _context.users.SingleOrDefault(u =>
-                u.username == loginUser.username && u.password == loginUser.password);
+            var user = _context.users.SingleOrDefault(u => u.username == loginUser.username);
 
-            if (user == null)
+            if (user == null || !BCrypt.Net.BCrypt.Verify(loginUser.password, user.password))
+            {
                 return Unauthorized(new { message = "Invalid username or password." });
+            }
 
             // JWT oluşturma
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -61,11 +63,13 @@ namespace quizify.Controller
                     user.name,
                     user.surname,
                     user.email,
-                    user.id
+                    user.id,
+                    phone = user.phone ?? "Not provided", // NULL kontrolü ekledik
+                    user.gender,
+                    user.department,
+                    user.img
                 }
             });
         }
-
-       
     }
 }
