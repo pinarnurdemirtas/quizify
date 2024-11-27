@@ -14,8 +14,8 @@ namespace quizify.Data
         public DbSet<Categories> categories { get; set; }
         public DbSet<Question> questions { get; set; }
         public DbSet<Test> testquestions { get; set; }
-        public DbSet<ExamQuestions> exam_questions { get; set; }
-        public DbSet<Exam> exams { get; set; }
+        public DbSet<ExamQuestions> ExamQuestions { get; set; }
+        public DbSet<Exam> Exam { get; set; }
 
 
 

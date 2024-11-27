@@ -33,20 +33,20 @@ namespace quizify.Controller
             // Yeni sınavı veritabanına ekle
             var newExam = new Exam
             {
-                user_id = newExamRequest.exam.user_id,
-                name = newExamRequest.exam.name,
-                pdf_url = "temporary_url", // PDF URL'sini burada oluşturabilirsiniz
-                created_at = DateTime.UtcNow
+                User_id = newExamRequest.exam.User_id,
+                Name = newExamRequest.exam.Name,
+                Pdf_url = "temporary_url", // PDF URL'sini burada oluşturabilirsiniz
+                Created_at = DateTime.UtcNow
             };
 
-            _context.exams.Add(newExam);
+            _context.Exam.Add(newExam);
             await _context.SaveChangesAsync(); // İlk olarak sınavı kaydet
 
             // ExamQuestions tablosuna soruları ekle
             foreach (var examQuestion in newExamRequest.examQuestions)
             {
-                examQuestion.exam_id = newExam.id;  // Yeni eklenen sınavın ID'sini kullan
-                await _context.exam_questions.AddAsync(examQuestion);
+                examQuestion.Exam_id = newExam.Id;  // Yeni eklenen sınavın ID'sini kullan
+                await _context.ExamQuestions.AddAsync(examQuestion);
             }
 
             await _context.SaveChangesAsync();
@@ -55,17 +55,17 @@ namespace quizify.Controller
             var pdfFilePath = _pdfService.GeneratePdf(newExam, newExamRequest.examQuestions);
 
             // PDF URL'sini güncelle
-            newExam.pdf_url = pdfFilePath;
-            _context.exams.Update(newExam);
+            newExam.Pdf_url = pdfFilePath;
+            _context.Exam.Update(newExam);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetExamById), new { id = newExam.id }, newExam);
+            return CreatedAtAction(nameof(GetExamById), new { id = newExam.Id }, newExam);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetExamById(int id)
         {
-            var exam = await _context.exams.FindAsync(id);
+            var exam = await _context.Exam.FindAsync(id);
             if (exam == null)
             {
                 return NotFound("Exam bulunamadı.");
@@ -76,8 +76,8 @@ namespace quizify.Controller
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetExamsByUserId(int userId)
         {
-            var exams = await _context.exams
-                .Where(e => e.user_id == userId)  // UserId'ye göre filtreleme
+            var exams = await _context.Exam
+                .Where(e => e.User_id == userId)  // UserId'ye göre filtreleme
                 .ToListAsync();
 
             if (exams == null || !exams.Any())
@@ -91,14 +91,14 @@ namespace quizify.Controller
         [HttpGet("{id}/pdf")]
         public async Task<IActionResult> GetPdf(int id)
         {
-            var exam = await _context.exams.FindAsync(id);
+            var exam = await _context.Exam.FindAsync(id);
             if (exam == null)
             {
                 return NotFound("Exam bulunamadı.");
             }
 
             // PDF dosyasının yolunu al
-            var pdfFilePath = exam.pdf_url;
+            var pdfFilePath = exam.Pdf_url;
             if (string.IsNullOrEmpty(pdfFilePath))
             {
                 return NotFound("PDF dosyası bulunamadı.");
@@ -127,21 +127,21 @@ namespace quizify.Controller
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteExam(int id)
         {
-            var exam = await _context.exams.FindAsync(id);
+            var exam = await _context.Exam.FindAsync(id);
             if (exam == null)
             {
                 return NotFound("Sınav bulunamadı.");
             }
 
             // Öncelikle sınavla ilişkili tüm soruları sil
-            var examQuestions = await _context.exam_questions
-                                              .Where(eq => eq.exam_id == id)
+            var examQuestions = await _context.ExamQuestions
+                                              .Where(eq => eq.Exam_id == id)
                                               .ToListAsync();
             
-            _context.exam_questions.RemoveRange(examQuestions);
+            _context.ExamQuestions.RemoveRange(examQuestions);
 
             // Sonra sınavı sil
-            _context.exams.Remove(exam);
+            _context.Exam.Remove(exam);
 
             try
             {

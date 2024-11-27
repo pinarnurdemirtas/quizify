@@ -23,7 +23,7 @@ namespace quizify.Controller
         {
 
             var questions = await _context.questions
-                .Where(q => q.category_id == category)
+                .Where(q => q.Category_id == category)
                 .ToListAsync();
 
             if (questions == null || questions.Count == 0)

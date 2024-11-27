@@ -33,13 +33,13 @@ namespace quizify.Services
             }
 
             // Exam.id kontrolü yapalım
-            if (exam == null || exam.id <= 0)
+            if (exam == null || exam.Id <= 0)
             {
                 throw new ArgumentException("Exam ID is invalid.");
             }
 
             // PDF dosyasını kaydetmek için tam dosya yolu
-            string filePath = Path.Combine(pdfFolderPath, $"Exam_{exam.id}.pdf");
+            string filePath = Path.Combine(pdfFolderPath, $"Exam_{exam.Id}.pdf");
 
             // PDF oluşturma işlemi burada yapılır
             PdfDocument pdfDocument = new PdfDocument();
