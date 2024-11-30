@@ -1,50 +1,31 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../services/api";  
 import "./Login.css";
 
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false); 
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
-
-        const loginData = {
-            username,
-            password,
-        };
-
+        if (!username || !password) {
+            setError("Both fields are required.");
+            return;
+        }
+        setIsLoading(true);
         try {
-            const response = await fetch("http://localhost:5000/api/Login/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(loginData),
-            });
-
-            if (!response.ok) {
-                throw new Error("Invalid username or password");
-            }
-
-            const data = await response.json();
-
-            // Check the data in the console for debugging
-            console.log("Login successful:", data);
-
-            // Store the token in localStorage (or sessionStorage depending on your needs)
+            const data = await loginUser({ username, password }); 
             localStorage.setItem("token", data.token);
-
             localStorage.setItem("user", JSON.stringify(data.user));
-
-            // Redirect to home page after successful login
-            alert(`Welcome, ${data.user.name}!`);
-            navigate("/home");  // Or use: window.location.href = "/home" for an alternative method
-
+            navigate("/home");
         } catch (err) {
             setError(err.message);
+        } finally {
+            setIsLoading(false); 
         }
     };
 
@@ -60,16 +41,18 @@ const Login = () => {
                         placeholder="Username"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        className="input-field"
+                        className="l_input-field"
                     />
                     <input
                         type="password"
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="input-field"
+                        className="l_input-field"
                     />
-                    <button type="submit" className="login-button">Sign In</button>
+                    <button type="submit" className="login-button" disabled={isLoading}>
+                        {isLoading ? "Logging in..." : "Sign In"}
+                    </button>
                 </form>
 
                 <p className="sign-up">

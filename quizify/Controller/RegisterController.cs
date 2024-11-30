@@ -3,68 +3,62 @@ using quizify.Models;
 using Microsoft.AspNetCore.Mvc;
 using BCrypt.Net;
 using Microsoft.EntityFrameworkCore;
+namespace quizify.Controller;
 
 
-namespace quizify.Controller
+[ApiController]
+[Route("api/[controller]")]
+public class RegisterController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class RegisterController : ControllerBase
+    private readonly QuizifyDbContext _context;
+    public RegisterController(QuizifyDbContext context)
     {
-        private readonly QuizifyDbContext _context;
+        _context = context;
+    }
 
-        //TEST
-        public RegisterController(QuizifyDbContext context)
+    [HttpPost("Register")]
+    public async Task<IActionResult> Register([FromBody] User user)
+    {
+        // Kullanıcı adı ve email kontrolleri
+        if (_context.Set<User>().Any(k => k.username == user.username))
         {
-            _context = context;
+            return BadRequest("Kullanıcı adı zaten kullanılıyor.");
+        }
+        if (_context.Set<User>().Any(k => k.email == user.email))
+        {
+            return BadRequest("Email zaten kullanılıyor.");
         }
 
-        [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] Kisi kisi)
+        // Şifreyi hash'le
+        var passwordHash = BCrypt.Net.BCrypt.HashPassword(user.password);
+        user.password = passwordHash;
+        
+        // Kullanıcıyı veritabanına ekle
+        _context.Set<User>().Add(user);
+        await _context.SaveChangesAsync();
+
+        //Başarılı Yanıt
+        return Ok("Kullanıcı başarıyla kaydedildi.");
+    }
+
+
+    [HttpDelete("delete/{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        // Kullanıcıyı ID ile bul
+        var kisi = await _context.Set<User>().FindAsync(id);
+        if (kisi == null)
         {
-            // Kullanıcı adı ve email kontrolleri
-            if (_context.Set<Kisi>().Any(k => k.username == kisi.username))
-            {
-                return BadRequest("Kullanıcı adı zaten kullanılıyor.");
-            }
-            if (_context.Set<Kisi>().Any(k => k.email == kisi.email))
-            {
-                return BadRequest("Email zaten kullanılıyor.");
-            }
-
-            // Şifreyi hash'le
-            var passwordHash = BCrypt.Net.BCrypt.HashPassword(kisi.password);
-            kisi.password = passwordHash;
-            
-
-            // Kullanıcıyı veritabanına ekle
-            _context.Set<Kisi>().Add(kisi);
-            await _context.SaveChangesAsync();
-
-            return Ok("Kullanıcı başarıyla kaydedildi.");
+            return NotFound("Kullanıcı bulunamadı.");
         }
 
-    
-        [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            // Kullanıcıyı ID ile bul
-            var kisi = await _context.Set<Kisi>().FindAsync(id);
+        // Kullanıcıyı sil
+        _context.Set<User>().Remove(kisi);
+        await _context.SaveChangesAsync();
 
-            if (kisi == null)
-            {
-                return NotFound("Kullanıcı bulunamadı.");
-            }
-
-            // Kullanıcıyı sil
-            _context.Set<Kisi>().Remove(kisi);
-            await _context.SaveChangesAsync();
-
-            return Ok("Kullanıcı başarıyla silindi.");
-        }
-    
-    
-    
+        //Başarılı Yanıt
+        return Ok("Kullanıcı başarıyla silindi.");
     }
 }
+
 

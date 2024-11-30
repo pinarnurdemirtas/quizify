@@ -5,24 +5,23 @@ using quizify.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 namespace quizify.Controller;
+
 
 [ApiController]
 [Route("api/[controller]")]
 public class CategoriesController : ControllerBase
 {
     private readonly QuizifyDbContext _context;
-
     public CategoriesController(QuizifyDbContext context)
     {
         _context = context;
     }
-
-    // Tüm kategorileri almak için
+    
     [HttpGet]
     public async Task<ActionResult<List<Categories>>> GetCategories(int? parentId = null)
     {
+        //Kategoriler Sorgusu
         IQueryable<Categories> categoriesQuery = _context.categories;
 
         // Eğer parentId null değilse, filtre uygula
@@ -30,7 +29,8 @@ public class CategoriesController : ControllerBase
         {
             categoriesQuery = categoriesQuery.Where(c => c.ParentId == parentId);
         }
-
+        
+        //Verileri Seçme
         var categories = await categoriesQuery
             .Select(c => new Categories
             {
@@ -40,6 +40,7 @@ public class CategoriesController : ControllerBase
             })
             .ToListAsync();
 
+        //Yanıt Döndürme
         return Ok(categories);
     }
 

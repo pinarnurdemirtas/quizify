@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import './categorylist.css';
+import { fetchCategories } from '../services/api.jsx';
+import './Categorylist.css';
 
 function Categories({ onLeafCategorySelect }) {
     const [categories, setCategories] = useState([]);
@@ -8,16 +9,17 @@ function Categories({ onLeafCategorySelect }) {
     const [expandedCategories, setExpandedCategories] = useState({});
 
     useEffect(() => {
-        fetch('http://localhost:5000/api/Categories')
-            .then((response) => response.json())
-            .then((data) => {
+        const getCategories = async () => {
+            try {
+                const data = await fetchCategories(); 
                 setCategories(data);
                 setLoading(false);
-            })
-            .catch((err) => {
+            } catch (err) {
                 setError(err.message);
                 setLoading(false);
-            });
+            }
+        };
+        getCategories();
     }, []);
 
     if (loading) return <div>Loading...</div>;
@@ -31,7 +33,7 @@ function Categories({ onLeafCategorySelect }) {
 
     const handleCategoryClick = (categoryId, isLeafCategory) => {
         if (isLeafCategory) {
-            onLeafCategorySelect(categoryId); // Seçilen kategori ID'sini üst bileşene gönder
+            onLeafCategorySelect(categoryId); 
         } else {
             setExpandedCategories(prev => ({
                 ...prev,

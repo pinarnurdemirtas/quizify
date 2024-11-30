@@ -1,7 +1,8 @@
-// Questions.js
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, Typography, Grid, Paper, Divider, Button, Box } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { fetchQuestionsByCategory, fetchTestQuestionsByCategory } from '../services/api'; 
+
 
 function Questions({ categoryId, handleAddToCart }) {
     const [questions, setQuestions] = useState([]);
@@ -12,31 +13,28 @@ function Questions({ categoryId, handleAddToCart }) {
 
     useEffect(() => {
         if (!categoryId) return;
-
         setLoading(true);
         setError(null);
-
-        // Kategoriye bağlı soruları almak için API çağrısı
-        fetch(`http://localhost:5000/api/Questions?category=${categoryId}`)
-            .then((response) => response.json())
-            .then((data) => {
-                setQuestions(data);
-            })
-            .catch((err) => {
+        const getQuestions = async () => {
+            try {
+                const fetchedQuestions = await fetchQuestionsByCategory(categoryId);
+                setQuestions(fetchedQuestions);
+            } catch (err) {
                 setError(err.message);
-            });
-
-        // Test soruları için ayrı API çağrısı
-        fetch(`http://localhost:5000/api/Tests/category/${categoryId}`)
-            .then((response) => response.json())
-            .then((data) => {
-                setTestQuestions(data);
+            }
+        };
+        const getTestQuestions = async () => {
+            try {
+                const fetchedTestQuestions = await fetchTestQuestionsByCategory(categoryId);
+                setTestQuestions(fetchedTestQuestions);
                 setLoading(false);
-            })
-            .catch((err) => {
+            } catch (err) {
                 setError(err.message);
                 setLoading(false);
-            });
+            }
+        };
+        getQuestions();
+        getTestQuestions();
     }, [categoryId]);
 
     const categorizedQuestions = {

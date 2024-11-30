@@ -1,0 +1,95 @@
+import axios from 'axios';
+const URL = "http://localhost:5000/api";
+
+
+//Login API çağrısı
+export const loginUser = async (payload) => {
+    const loginUrl = `${URL}/Login/login`; 
+    try {
+        const response = await axios.post(loginUrl, payload, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Login error:", error.message);
+        throw error;
+    }
+};
+
+//Register API çağrısı
+export const registerUser = async (payload) => {
+    const registerUrl = `${URL}/Register/Register`;
+    try {
+        const response = await axios.post(registerUrl, payload);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+// Soruları almak için API çağrısı
+export const fetchQuestionsByCategory = async (categoryId) => {
+    try {
+        const response = await fetch(`${URL}/Questions?category=${categoryId}`);
+        if (!response.ok) throw new Error('Failed to fetch questions');
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
+// Test soruları için ayrı API çağrısı
+export const fetchTestQuestionsByCategory = async (categoryId) => {
+    try {
+        const response = await fetch(`${URL}/TestQuestions/category/${categoryId}`);
+        if (!response.ok) throw new Error('Failed to fetch test questions');
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
+// PDF'yi sunucuya yüklemek için API çağrısı
+export const uploadPdf = async (pdfBlob) => {
+    const formData = new FormData();
+    formData.append('file', pdfBlob, 'sinav_sorulari.pdf');
+
+    try {
+        const uploadResponse = await axios.post(`${URL}/Exam/upload`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return uploadResponse.data.url;
+    } catch (error) {
+        throw new Error('There was an error uploading the PDF: ' + (error.response?.data || error.message));
+    }
+};
+
+// Sınav verisini kaydetmek için API çağrısı
+export const saveExam = async (examData) => {
+    try {
+        await axios.post(`${URL}/Exam`, examData);
+        console.log('Exam saved successfully!');
+    } catch (error) {
+        throw new Error('There was an error saving the exam: ' + (error.response?.data || error.message));
+    }
+};
+
+// Kategorileri almak için API çağrısı
+export const fetchCategories = async () => {
+    try {
+        const response = await fetch(`${URL}/Categories`);
+        if (!response.ok) {
+            throw new Error('Error fetching categories');
+        }
+        const data = await response.json();
+        return data;
+    } catch (err) {
+        throw new Error(err.message || 'Unknown error');
+    }
+};

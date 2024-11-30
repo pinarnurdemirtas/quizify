@@ -1,67 +1,54 @@
 import React, { useState } from 'react';
 import { Drawer, Card, CardContent, Typography, List, ListItem, IconButton, ListItemSecondaryAction, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
-import axios from 'axios'; // Import axios
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import jsPDF from 'jspdf';
-import DejaVuSans from '../assets/Fonts/DejaVuSans.ttf'; // Fontları doğru şekilde yüklemek için
+import DejaVuSans from '../assets/Fonts/DejaVuSans.ttf'; 
+import { uploadPdf, saveExam } from '../services/api'; 
 
 function Cart({ cartItems, open, onClose, onRemove, onComplete }) {
-    const [openModal, setOpenModal] = useState(false);  // Modal açma/kapama durumunu kontrol etmek için
-    const [examName, setExamName] = useState('');  // Kullanıcının girdiği sınav adı
+    const [openModal, setOpenModal] = useState(false);  
+    const [examName, setExamName] = useState('');  
 
-    const handleComplete = () => {
+    const handleComplete = async () => {
         if (!examName) {
             alert('Lütfen sınav adını girin.');
             return;
         }
-
         const doc = new jsPDF();
-
-        // Türkçe karakter desteği için fontu yükleyin
+        
         doc.addFont(DejaVuSans, 'DejaVu', 'normal');
-        doc.setFont('DejaVu'); // Burada fontu kullanıyoruz
-
+        doc.setFont('DejaVu'); 
         doc.setFontSize(18);
         doc.setTextColor(40, 40, 40);
-        // "Ad Soyad" metnini sağa hizalayarak ekliyoruz
         doc.text(`Ad Soyad: `, 50, 10, { align: "right" });
-
-// "Numara" metnini sola hizalayarak ekliyoruz
-        doc.text(`Numara: `, 120, 10, { align: "left" }); // Y pozisyonunu 40 yaparak aralarına boşluk ekledik
-
-// "Sınav Soruları" başlığını merkeze hizalayarak daha aşağıya ekliyoruz
-        doc.text(` ${examName} Sınav Soruları`, 105, 30, { align: "center" }); // Y pozisyonunu 60 yaparak başlığı daha aşağıya yerleştiriyoruz
-
+        doc.text(`Numara: `, 120, 10, { align: "left" });
+        doc.text(`${examName} Sınav Soruları`, 105, 30, { align: "center" });
 
         let currentY = 50;
         const pageHeight = doc.internal.pageSize.height;
-
         const marginLeft = 10;
         const marginRight = 10;
-        const maxWidth = doc.internal.pageSize.width - marginLeft - marginRight; // Sayfa genişliği
+        const maxWidth = doc.internal.pageSize.width - marginLeft - marginRight;
 
-        const examQuestions = []; // Array to store exam questions
+        const examQuestions = [];
         cartItems.forEach((item, index) => {
             doc.setFontSize(14);
             doc.setTextColor(0, 0, 0);
 
-            // Soruları eklerken, satıra sığmadığında yeni sayfaya geçmesini sağlamak
             const itemText = `${index + 1}. ${item.text}`;
             if (currentY + 10 > pageHeight - 20) {
                 doc.addPage();
-                currentY = 20; // Yeni sayfada yazının başladığı yer
+                currentY = 20;
             }
 
-            // Metni sığdırmak için doc.text'in genişliğini kontrol edin
-            doc.text(itemText, marginLeft, currentY, { maxWidth: maxWidth });
+            doc.text(itemText, marginLeft, currentY, { maxWidth });
             currentY += 10;
 
-            // Store the question in examQuestions array
             examQuestions.push({
                 question_id: item.id,
-                exam_id: 0, // You can update this when creating the exam in the database
-                created_at: new Date().toISOString()
+                exam_id: 0,
+                created_at: new Date().toISOString(),
             });
 
             if (item.options && Array.isArray(item.options) && item.options.some(opt => opt !== undefined)) {
@@ -72,58 +59,43 @@ function Cart({ cartItems, open, onClose, onRemove, onComplete }) {
                             doc.addPage();
                             currentY = 20;
                         }
-                        doc.text(optionText, marginLeft + 10, currentY, { maxWidth: maxWidth - 10 }); // Option'ları sığdırıyoruz
+                        doc.text(optionText, marginLeft + 10, currentY, { maxWidth: maxWidth - 10 });
                         currentY += 8;
                     }
                 });
-            } else {
-                const noOptionText = '';
-                if (currentY + 8 > pageHeight - 20) {
-                    doc.addPage();
-                    currentY = 20;
-                }
-                doc.setFontSize(12);
-                doc.setTextColor(150, 150, 150);
-                doc.text(noOptionText, marginLeft, currentY, { maxWidth: maxWidth });
-                currentY += 10;
             }
             currentY += 10;
         });
 
-        // Save the PDF document
-        doc.save("sinav_sorulari.pdf");
+        const pdfBlob = doc.output('blob');
 
-        // Get user_id from localStorage
-        const user = JSON.parse(localStorage.getItem("user"));
-        const user_id = user ? user.id : null; // Ensure user is available
+        try {
+            const fileUrl = await uploadPdf(pdfBlob);
+            const user = JSON.parse(localStorage.getItem("user"));
+            const user_id = user ? user.id : null;
+            if (user_id) {
+                const examData = {
+                    exam: {
+                        id: 0,
+                        user_id: user_id,
+                        name: examName,
+                        pdf_url: fileUrl,
+                        created_at: new Date().toISOString(),
+                    },
+                    examQuestions: examQuestions,
+                };
 
-        if (user_id) {
-            // Create the exam data object
-            const examData = {
-                exam: {
-                    id: 0, // This will be assigned later by the database
-                    user_id: user_id, // Use the logged-in user's ID
-                    name: examName, // Kullanıcının girdiği sınav adı
-                    pdf_url: "path/to/pdf", // You can provide the URL or path where the PDF is saved
-                    created_at: new Date().toISOString()
-                },
-                examQuestions: examQuestions
-            };
-
-            console.log('Sending exam data:', examData);  // Log the data
-            setExamName('');  // Modal içini temizle
-            setOpenModal(false); // Close the modal on success
-            axios.post('http://localhost:5000/api/Exam', examData)
-                .then(response => {
-                    console.log('Exam saved successfully:', response.data);
-                })
-                .catch(error => {
-                    console.error('There was an error saving the exam:', error.response?.data || error.message);
-                });
-
-        } else {
-            console.error("User is not logged in.");
+                await saveExam(examData);
+                window.open(fileUrl, '_blank');
+            } else {
+                console.error("User is not logged in.");
+            }
+        } catch (error) {
+            console.error(error.message);
         }
+
+        setExamName('');
+        setOpenModal(false);
     };
 
     const handleOpenModal = () => setOpenModal(true);

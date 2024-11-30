@@ -1,6 +1,6 @@
 namespace quizify.Models
 {
-    public class Test
+    public class TestQuestion
     {
         public int id { get; set; }  
         public int category_id { get; set; }  

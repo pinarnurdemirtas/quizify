@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import "./Register.css"; // CSS dosyanız varsa
+import { registerUser } from "../services/api.jsx"; 
+import "./Register.css"; 
 
 const Register = () => {
     const [name, setName] = useState("");
@@ -17,14 +17,12 @@ const Register = () => {
 
     const handleRegister = async (e) => {
         e.preventDefault();
-
-        // Conditionally set the image URL based on gender
         const img =
             gender === "male"
                 ? "https://api.dicebear.com/8.x/adventurer/svg?seed=Cuddles&flip=true"
                 : gender === "female"
                     ? "https://api.dicebear.com/8.x/adventurer/svg?seed=Cookie&flip=true"
-                    : ""; // You can add a default or blank image for "other" or empty selection
+                    : ""; 
 
         const payload = {
             name,
@@ -37,13 +35,11 @@ const Register = () => {
             gender,
             img,
         };
-        console.log(payload); // Log to check data
+        console.log(payload); 
         try {
-            const response = await axios.post('http://localhost:5000/api/Register/Register', payload);
-            // handle success
-            console.log('Registration successful:', response.data);
-            // Optionally, you can redirect the user after successful registration
-            navigate("/somePath"); // Change to the appropriate route
+            const response = await registerUser(payload); 
+            console.log('Registration successful:', response);
+            navigate("/"); 
         } catch (error) {
             console.error('Registration failed:', error.message);
 

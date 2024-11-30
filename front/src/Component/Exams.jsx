@@ -117,7 +117,15 @@ const Exam = () => {
                 <DialogTitle>{selectedExam?.name}</DialogTitle>
                 <DialogContent>
                     <Typography variant="body1">Oluşturulma Tarihi: {dayjs(selectedExam?.created_at).format('DD MMMM YYYY')}</Typography>
-                    <Typography variant="h6">PDF: <a href={selectedExam?.pdf_url} target="_blank" rel="noopener noreferrer">İndir</a></Typography>
+                    <Typography variant="h6">
+                        PDF:
+                        <a
+                            href={selectedExam?.pdf_url}
+                            target="_blank"
+                            rel="noopener noreferrer">
+                            İndir
+                        </a>
+                    </Typography>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseModal} color="primary">Kapat</Button>

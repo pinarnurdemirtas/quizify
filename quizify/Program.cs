@@ -4,7 +4,6 @@ using Microsoft.IdentityModel.Tokens;
 using quizify.Data;
 using quizify.Helpers;
 using System.Text;
-using quizify.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +12,6 @@ builder.Services.AddDbContext<QuizifyDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
-builder.Services.AddScoped<PdfService>();
 
 // JWT ayarlarını yükle
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
@@ -62,6 +60,8 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Quizify API v1");
     });
 }
+
+app.UseStaticFiles(); // Statik dosyaları sunar
 
 // Middleware
 app.UseCors("AllowAllOrigins"); // CORS politikasını uygula

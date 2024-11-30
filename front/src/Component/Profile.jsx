@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, Typography, IconButton, Grid, Avatar } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import "./profile.css";
+import "./Profile.css";
 
 const Profile = () => {
     const navigate = useNavigate();

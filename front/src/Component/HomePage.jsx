@@ -6,13 +6,13 @@ import Categories from "./CategoryList";
 import Profile from "./Profile";
 import Questions from "./Questions";
 import Cart from "./Cart";
-import "./home.css";
 import Exams from "./Exams.jsx";
+import "./Home.css";
 
 const HomePage = () => {
     const [currentPage, setCurrentPage] = useState("questions");
     const [selectedCategoryId, setSelectedCategoryId] = useState(null);
-    const [cartItems, setCartItems] = useState([]); // Sepet öğeleri burada tutuluyor
+    const [cartItems, setCartItems] = useState([]); 
     const [drawerOpen, setDrawerOpen] = useState(false);
 
     const navigate = (page) => {
@@ -76,7 +76,7 @@ const HomePage = () => {
                             {selectedCategoryId ? (
                                 <Questions
                                     categoryId={selectedCategoryId}
-                                    handleAddToCart={handleAddToCart} // Cart'a ekleme fonksiyonu props olarak gönderiliyor
+                                    handleAddToCart={handleAddToCart} 
                                 />
                             ) : (
                                 <p>Lütfen bir kategori seçin.</p>
