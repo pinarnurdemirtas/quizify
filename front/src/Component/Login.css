@@ -58,7 +58,7 @@ body {
 .input-field {
     width: 100%;
     padding: 14px;
-    margin: 12px 0;
+    margin: 15px;
     border: 1px solid #ddd;
     border-radius: 12px; /* Yuvarlak köşeler */
     font-size: 14px;
@@ -150,7 +150,7 @@ body {
     border-radius: 8px;
     font-size: 13px;
     padding: 12px;
-    margin: 10px 0;
+    margin: 10px;
 }
 
     /* Focus olduğunda yazı rengi yine siyah kalır */
