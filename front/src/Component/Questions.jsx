@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {Card, CardContent, Typography, Grid, Paper, Divider, Button, Box, Modal, TextField, IconButton} from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CloseIcon from '@mui/icons-material/Close';
-import { fetchQuestionsByCategory, fetchTestQuestionsByCategory, addQuestion } from '../services/api';
+import { fetchQuestionsByCategory, fetchTestQuestionsByCategory, addQuestion, addTestQuestion } from '../services/api';
 
 function Questions({ categoryId, handleAddToCart }) {
     const [questions, setQuestions] = useState([]);
@@ -71,14 +71,30 @@ function Questions({ categoryId, handleAddToCart }) {
 
     const handleAddQuestion = async () => {
         try {
-            const addedQuestion = await addQuestion(newQuestion); // POST işlemi
-            setQuestions([...questions, addedQuestion]); // Yeni soru listeye ekleniyor
+            if (newQuestion.question_type === 'test') {
+                // Test sorusu ekleme (question_type olmadan gönderim yapılır)
+                const { question_type, ...testQuestionData } = newQuestion; // question_type'ı çıkar
+                const addedTestQuestion = await addTestQuestion({
+                    ...testQuestionData,
+                    op1: newQuestion.op1 || '',
+                    op2: newQuestion.op2 || '',
+                    op3: newQuestion.op3 || '',
+                    op4: newQuestion.op4 || '',
+                });
+                setTestQuestions([...testQuestions, addedTestQuestion]);
+            } else {
+                // Klasik soru ekleme (question_type dahil edilir)
+                const addedQuestion = await addQuestion(newQuestion);
+                setQuestions([...questions, addedQuestion]); // Listeye ekle
+            }
             handleCloseModal();
             setNewQuestion({ question_text: '', question_type: '', category_id: categoryId });
         } catch (err) {
             setError(err.message);
         }
     };
+
+
 
     if (loading) return <div>Loading questions...</div>;
     if (error) return <div>Error: {error}</div>;
@@ -155,7 +171,6 @@ function Questions({ categoryId, handleAddToCart }) {
                     </Box>
                 </div>
             )}
-            {/* Modal Bileşeni */}
             <Modal
                 open={openModal}
                 onClose={handleCloseModal}
@@ -192,6 +207,42 @@ function Questions({ categoryId, handleAddToCart }) {
                         value={newQuestion.question_text}
                         onChange={(e) => setNewQuestion({ ...newQuestion, question_text: e.target.value })}
                     />
+                    {selectedCategory === 'Test' && (
+                        <>
+                            <TextField
+                                fullWidth
+                                margin="normal"
+                                label="Seçenek A"
+                                variant="outlined"
+                                value={newQuestion.op1 || ''}
+                                onChange={(e) => setNewQuestion({ ...newQuestion, op1: e.target.value })}
+                            />
+                            <TextField
+                                fullWidth
+                                margin="normal"
+                                label="Seçenek B"
+                                variant="outlined"
+                                value={newQuestion.op2 || ''}
+                                onChange={(e) => setNewQuestion({ ...newQuestion, op2: e.target.value })}
+                            />
+                            <TextField
+                                fullWidth
+                                margin="normal"
+                                label="Seçenek C"
+                                variant="outlined"
+                                value={newQuestion.op3 || ''}
+                                onChange={(e) => setNewQuestion({ ...newQuestion, op3: e.target.value })}
+                            />
+                            <TextField
+                                fullWidth
+                                margin="normal"
+                                label="Seçenek D"
+                                variant="outlined"
+                                value={newQuestion.op4 || ''}
+                                onChange={(e) => setNewQuestion({ ...newQuestion, op4: e.target.value })}
+                            />
+                        </>
+                    )}
                     <Button
                         variant="contained"
                         fullWidth
@@ -202,6 +253,7 @@ function Questions({ categoryId, handleAddToCart }) {
                     </Button>
                 </Box>
             </Modal>
+
         </div>
     );
 }

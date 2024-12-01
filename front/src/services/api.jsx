@@ -67,6 +67,28 @@ export const fetchTestQuestionsByCategory = async (categoryId) => {
     }
 };
 
+// Test Sorusu eklemek için API çağrısı
+export const addTestQuestion = async (testQuestionData) => {
+    try {
+        const response = await fetch(`${URL}/TestQuestions`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(testQuestionData),
+        });
+        if (!response.ok) {
+            throw new Error('Test sorusu eklenirken bir hata oluştu.');
+        }
+        return await response.json();
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+
+
+
 // PDF'yi sunucuya yüklemek için API çağrısı
 export const uploadPdf = async (pdfBlob) => {
     const formData = new FormData();
