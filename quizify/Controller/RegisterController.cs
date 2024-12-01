@@ -20,11 +20,11 @@ public class RegisterController : ControllerBase
     public async Task<IActionResult> Register([FromBody] User user)
     {
         // Kullanıcı adı ve email kontrolleri
-        if (_context.Set<User>().Any(k => k.username == user.username))
+        if (_context.users.Any(k => k.username == user.username))
         {
             return BadRequest("Kullanıcı adı zaten kullanılıyor.");
         }
-        if (_context.Set<User>().Any(k => k.email == user.email))
+        if (_context.users.Any(k => k.email == user.email))
         {
             return BadRequest("Email zaten kullanılıyor.");
         }
@@ -34,7 +34,7 @@ public class RegisterController : ControllerBase
         user.password = passwordHash;
         
         // Kullanıcıyı veritabanına ekle
-        _context.Set<User>().Add(user);
+        _context.users.Add(user);
         await _context.SaveChangesAsync();
 
         //Başarılı Yanıt
@@ -46,14 +46,14 @@ public class RegisterController : ControllerBase
     public async Task<IActionResult> Delete(int id)
     {
         // Kullanıcıyı ID ile bul
-        var kisi = await _context.Set<User>().FindAsync(id);
+        var kisi = await _context.users.FindAsync(id);
         if (kisi == null)
         {
             return NotFound("Kullanıcı bulunamadı.");
         }
 
         // Kullanıcıyı sil
-        _context.Set<User>().Remove(kisi);
+        _context.users.Remove(kisi);
         await _context.SaveChangesAsync();
 
         //Başarılı Yanıt

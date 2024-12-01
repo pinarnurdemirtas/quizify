@@ -29,4 +29,12 @@ public class TestQuestionsController : ControllerBase
         }
         return Ok(tests);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> AddTestQuestion([FromBody] TestQuestion testQuestion)
+    {
+        _context.testquestions.Add(testQuestion);
+        await _context.SaveChangesAsync();
+        return Ok(testQuestion);
+    }
 }

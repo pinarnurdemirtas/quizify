@@ -41,6 +41,20 @@ export const fetchQuestionsByCategory = async (categoryId) => {
     }
 };
 
+// Soru eklemek için API çağrısı
+export const addQuestion = async (questionData) => {
+    const response = await fetch(`${URL}/Questions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(questionData),
+    });
+    if (!response.ok) {
+        throw new Error('Soru eklenemedi!');
+    }
+    return await response.json();
+};
+
+
 // Test soruları için ayrı API çağrısı
 export const fetchTestQuestionsByCategory = async (categoryId) => {
     try {

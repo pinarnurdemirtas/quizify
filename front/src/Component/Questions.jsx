@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, Typography, Grid, Paper, Divider, Button, Box } from '@mui/material';
+import {Card, CardContent, Typography, Grid, Paper, Divider, Button, Box, Modal, TextField, IconButton} from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { fetchQuestionsByCategory, fetchTestQuestionsByCategory } from '../services/api'; 
-
+import CloseIcon from '@mui/icons-material/Close';
+import { fetchQuestionsByCategory, fetchTestQuestionsByCategory, addQuestion } from '../services/api';
 
 function Questions({ categoryId, handleAddToCart }) {
     const [questions, setQuestions] = useState([]);
@@ -10,6 +10,14 @@ function Questions({ categoryId, handleAddToCart }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState(null);
+
+    // Modal kontrolü ve form verileri için state
+    const [openModal, setOpenModal] = useState(false);
+    const [newQuestion, setNewQuestion] = useState({
+        question_text: '',
+        question_type: '', // Seçili kategoriye göre otomatik ayarlanacak
+        category_id: categoryId,
+    });
 
     useEffect(() => {
         if (!categoryId) return;
@@ -50,6 +58,28 @@ function Questions({ categoryId, handleAddToCart }) {
         setSelectedCategory(category);
     };
 
+    const handleOpenModal = () => {
+        // Modal açıldığında yeni sorunun tipi, seçilen kategoriye göre ayarlanır
+        setNewQuestion((prev) => ({
+            ...prev,
+            question_type: selectedCategory.toLowerCase(), // Kategori adı küçük harfli olacak şekilde atanıyor
+        }));
+        setOpenModal(true);
+    };
+
+    const handleCloseModal = () => setOpenModal(false);
+
+    const handleAddQuestion = async () => {
+        try {
+            const addedQuestion = await addQuestion(newQuestion); // POST işlemi
+            setQuestions([...questions, addedQuestion]); // Yeni soru listeye ekleniyor
+            handleCloseModal();
+            setNewQuestion({ question_text: '', question_type: '', category_id: categoryId });
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
     if (loading) return <div>Loading questions...</div>;
     if (error) return <div>Error: {error}</div>;
 
@@ -65,12 +95,8 @@ function Questions({ categoryId, handleAddToCart }) {
                             sx={{
                                 color: "black",
                                 backgroundColor: 'rgba(211,211,211,0.49)',
-                                '&:hover': {
-                                    backgroundColor: 'rgba(143,175,244,0.71)',
-                                },
-                                '&:focus': {
-                                    outline: 'none',
-                                },
+                                '&:hover': { backgroundColor: 'rgba(143,175,244,0.71)' },
+                                '&:focus': { outline: 'none' },
                                 boxShadow: '0px 5px 10px #94a4fa',
                             }}
                         >
@@ -105,9 +131,7 @@ function Questions({ categoryId, handleAddToCart }) {
                                                 size="large"
                                                 sx={{
                                                     color: "#152eb1",
-                                                    '&:focus': {
-                                                        outline: 'none',
-                                                    },
+                                                    '&:focus': { outline: 'none' },
                                                 }}
                                                 onClick={() => handleAddToCart(question)}
                                                 startIcon={<AddCircleIcon />}
@@ -118,10 +142,66 @@ function Questions({ categoryId, handleAddToCart }) {
                                 </Paper>
                             </Box>
                         ))}
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            fullWidth
+                            sx={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}                            
+                            onClick={handleOpenModal}
+                            startIcon={<AddCircleIcon />}
+                        >
+                            Yeni Soru Ekle
+                        </Button>
                     </Box>
-
                 </div>
             )}
+            {/* Modal Bileşeni */}
+            <Modal
+                open={openModal}
+                onClose={handleCloseModal}
+                aria-labelledby="add-question-modal"
+                aria-describedby="add-question-form"
+            >
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: 400,
+                        bgcolor: 'background.paper',
+                        boxShadow: 24,
+                        p: 4,
+                        borderRadius: 2,
+                    }}
+                >
+                    <IconButton
+                        onClick={handleCloseModal}
+                        sx={{ position: 'absolute', top: 8, right: 8 }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                    <Typography variant="h6" component="h2" gutterBottom>
+                        Yeni Soru Ekle
+                    </Typography>
+                    <TextField
+                        fullWidth
+                        margin="normal"
+                        label="Soru Metni"
+                        variant="outlined"
+                        value={newQuestion.question_text}
+                        onChange={(e) => setNewQuestion({ ...newQuestion, question_text: e.target.value })}
+                    />
+                    <Button
+                        variant="contained"
+                        fullWidth
+                        sx={{ mt: 2 }}
+                        onClick={handleAddQuestion}
+                    >
+                        Ekle
+                    </Button>
+                </Box>
+            </Modal>
         </div>
     );
 }

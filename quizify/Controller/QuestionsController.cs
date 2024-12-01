@@ -28,4 +28,12 @@ public class QuestionsController : ControllerBase
         }
         return Ok(questions);
     }
+
+    [HttpPost]
+    public async Task<ActionResult<Question>> PostQuestion(Question question)
+    {
+        _context.questions.Add(question);
+        await _context.SaveChangesAsync();
+        return Ok(question);
+    }
 }
