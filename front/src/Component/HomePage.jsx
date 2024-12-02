@@ -95,7 +95,8 @@ const HomePage = () => {
 
     return (
         <div className="homepage-container">
-            <AppBar position="static" sx={{ backgroundColor: "#6E8EFBFF" }}>
+            <AppBar position="static" sx={{ background: "linear-gradient(to left, #000000, #3533cd)" }}
+            >
                 <Toolbar sx={{ justifyContent: "space-between" }}>
                     <Typography variant="h6" className="app-title">
                         QUIZIFY

@@ -107,9 +107,9 @@ function Questions({ categoryId, handleAddToCart }) {
                             sx={{
                                 color: "black",
                                 backgroundColor: 'rgba(211,211,211,0.49)',
-                                '&:hover': { backgroundColor: 'rgba(143,175,244,0.71)' },
+                                '&:hover': { backgroundColor: '#010b2c', color:"white" },
                                 '&:focus': { outline: 'none' },
-                                boxShadow: '0px 5px 10px #94a4fa',
+                                boxShadow: '0px 5px 10px #3533cd',
                             }}
                         >
                             {category.charAt(0).toUpperCase() + category.slice(1)}
@@ -142,7 +142,7 @@ function Questions({ categoryId, handleAddToCart }) {
                                             <Button
                                                 size="large"
                                                 sx={{
-                                                    color: "#152eb1",
+                                                    color: "#010b2c",
                                                     '&:focus': { outline: 'none' },
                                                 }}
                                                 onClick={() => handleAddToCart(question)}
@@ -165,9 +165,9 @@ function Questions({ categoryId, handleAddToCart }) {
                                 maxWidth: 130,
                                 overflowY: 'auto',
                                 zIndex: 1000,  
-                                color: "black",
-                                backgroundColor: 'rgba(143,175,244,0.71)',
-                                '&:hover': { backgroundColor: 'rgba(211,211,211,0.49)' },
+                                color: "white",
+                                backgroundColor: '#010b2c',
+                                '&:hover': { backgroundColor: 'rgba(211,211,211,0.49)', color: "#010b2c" },
                                 '&:focus': { outline: 'none' },
                                 boxShadow: '0px 15px 20px #D3D3D37C',
                             }}

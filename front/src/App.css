@@ -4,8 +4,13 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Ekran yüksekliğine uyum sağlar */
-  background-color: #f4f4f4;
+  min-height: 100vh; /* Görünüm yüksekliğini kapsar */
+  min-width: 100vw; /* Görünüm genişliğini kapsar */
+  background-image: url('./assets/arkaplan.jpg');
+  background-size: 100% 100%; /* Resmi yatayda ve dikeyde tam oturtur */
+  background-position: center; /* Resmi ortalar */
+  background-repeat: no-repeat; /* Resmin tekrarını engeller */
+  background-color: #f4f4f4; /* Yedek bir arka plan rengi */
   font-family: 'Roboto', sans-serif;
 }
 

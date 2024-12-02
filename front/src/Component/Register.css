@@ -17,7 +17,7 @@
     font-size: 34px; /* Başlık büyütüldü */
     font-weight: 700;
     margin-bottom: 10px;
-    color: #6e8efb;
+    color: #3533cd;
     text-transform: uppercase; /* Başlık yazısı büyük harf */
     text-align: center; /* Ortala */
 }
@@ -48,7 +48,7 @@
     width: 100%;
     padding: 10px;
     margin-top: 20px;
-    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    background: linear-gradient(to left, #000000, #3533cd); /* Sağdan sola geçiş */
     color: white;
     border: none;
     border-radius: 12px;
@@ -59,6 +59,6 @@
 }
 
 .register-button:hover {
-    background: linear-gradient(135deg, #5e7ceb, #9068e3);
+    background: linear-gradient(to left, #3533cd, #000000); /* Sağdan sola geçiş */
     transform: translateY(-5px); /* Hoverda yukarı kayma efekti */
 }

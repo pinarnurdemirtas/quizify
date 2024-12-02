@@ -54,7 +54,7 @@ const Register = () => {
     return (
         <div className="register-card">
             <div className="register-form">
-                <h1 className="register-title">Register</h1>
+                <h1 className="register-title">Sıgn up</h1>
                 {error && <div className="error-message">{error}</div>}
 
                 <form onSubmit={handleRegister}>

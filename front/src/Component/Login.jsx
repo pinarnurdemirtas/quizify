@@ -32,7 +32,7 @@ const Login = () => {
     return (
         <div className="login-card">
             <div className="login-form">
-                <h1 className="login-title">Login</h1>
+                <h1 className="login-title">Welcome</h1>
                 {error && <div className="error-message">{error}</div>}
 
                 <form onSubmit={handleLogin}>

@@ -1,8 +1,8 @@
 ﻿/* Genel ayarlar */
 body {
+    background-image: url('../assets/arkaplan.jpg');
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #6e8efb, #a777e3); /* Daha modern gradyan */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,6 +15,7 @@ body {
 
 /* Login Card */
 .login-card {
+    background-image: url('../assets/arkaplan.jpg');
     display: flex;
     flex-direction: row;
     border-radius: 20px; /* Daha yuvarlak köşeler */
@@ -42,7 +43,7 @@ body {
     font-size: 34px; /* Başlık büyütüldü */
     font-weight: 700;
     margin-bottom: 10px;
-    color: #6e8efb;
+    color: #3533cd;
     text-transform: uppercase; /* Başlık yazısı büyük harf */
     text-align: center; /* Ortala */
 }
@@ -67,8 +68,8 @@ body {
 
 /* Input alanı odaklandığında */
 .input-field {
-    background-color: #b3d9ff;
-    border: 1px solid #99b3cc;
+    background-color: #d6d6d6;
+    border: 1px solid #a5a5a5;
 }
 
 /* Login Butonu */
@@ -76,19 +77,20 @@ body {
     width: 94%;
     padding: 14px;
     margin-top: 20px;
-    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    background: linear-gradient(to left, #000000, #3533cd); /* Sağdan sola geçiş */
     color: white;
     border: none;
     border-radius: 12px;
     font-size: 16px;
     cursor: pointer;
     transition: all 0.3s ease;
+    margin-left: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
     /* Buton hover efekti */
     .login-button:hover {
-        background: linear-gradient(135deg, #5e7ceb, #9068e3);
+        background: linear-gradient(to left, #3533cd, #000000); /* Sağdan sola geçiş */
         transform: translateY(-5px); /* Hoverda yukarı kayma efekti */
     }
 
@@ -107,14 +109,14 @@ body {
 /* Sign Up Link */
 .sign-up-link {
     text-align: center;
-    color: #6e8efb;
+    color: #3533cd;
     text-decoration: none;
     font-weight: 600;
     transition: color 0.3s ease;
 }
 
     .sign-up-link:hover {
-        color: #4a6ff1; /* Hover efektiyle renk değişimi */
+        color: #000000; /* Hover efektiyle renk değişimi */
     }
 
 /* Error Mesajı */
@@ -131,7 +133,7 @@ body {
 /* Info Section */
 .info-section {
     flex: 1;
-    background: linear-gradient(135deg, #c294fb, #6e8efb);
+    background: linear-gradient(to left, #3533cd, #000000); /* Sağdan sola geçiş */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -157,6 +159,6 @@ body {
     .input-field:focus {
         background-color: #f2f2f2; /* Arka plan değişmez */
         color: #000; /* Yazı rengi siyah kalır */
-        border-color: #6e8efb; /* Focus durumunda kenar rengi mavi */
-        box-shadow: 0 0 8px rgba(110, 142, 251, 0.5);
+        border-color: #bbbbfd; /* Focus durumunda kenar rengi mavi */
+        box-shadow: 0 0 8px rgba(187, 217, 248, 0.5);
     }
