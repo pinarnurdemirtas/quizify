@@ -25,7 +25,7 @@
     width: 90px;
     height: 90px;
     border-radius: 50%;
-    border: 3px solid #3f454a; /* Profil fotoğrafı etrafında mavi bir çerçeve */
+    border: 3px solid #3f454a; 
 }
 
 .profile-detail {

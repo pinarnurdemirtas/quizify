@@ -1,59 +1,50 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, Typography, Grid, CardActionArea, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import dayjs from "dayjs"; // dayjs kütüphanesini import ediyoruz
-import DeleteIcon from "@mui/icons-material/Delete"; // Delete iconunu import ediyoruz
+import dayjs from "dayjs"; 
+import DeleteIcon from "@mui/icons-material/Delete"; 
+import { fetchExams, deleteExam } from "../services/api.jsx"; 
 
 const Exam = () => {
     const [exams, setExams] = useState([]);
-    const [selectedExam, setSelectedExam] = useState(null); // Seçilen sınav detayları
-    const [openModal, setOpenModal] = useState(false); // Modal'ı kontrol etmek için state
+    const [selectedExam, setSelectedExam] = useState(null); 
+    const [openModal, setOpenModal] = useState(false); 
     const navigate = useNavigate();
-
-    // Kullanıcı verilerini localStorage'dan alıyoruz
     const user = JSON.parse(localStorage.getItem("user"));
 
-    // Eğer user verisi bulunamazsa, hata mesajı gösterilebilir veya yönlendirme yapılabilir
     if (!user) {
         return <Typography variant="h6" color="error">Kullanıcı verisi bulunamadı. Lütfen giriş yapın.</Typography>;
     }
 
-    // Kullanıcı ID'sini alıyoruz
     const userId = user.id;
 
-    // Sınavları API'den çekiyoruz (kullanıcıya özel)
     useEffect(() => {
-        const fetchExams = async () => {
+        const getExams = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/Exam/user/${userId}`);
-                setExams(response.data);
+                const examsData = await fetchExams(userId);
+                setExams(examsData);
             } catch (error) {
                 console.error("Error fetching exams:", error);
             }
         };
-        fetchExams();
+        getExams();
     }, [userId]);
 
-    // Sınavın detaylarını almak için API çağrısı
     const handleExamClick = (examId) => {
-        // Modal'ı açıyoruz ve seçilen sınavın detaylarını alıyoruz
         const selected = exams.find((exam) => exam.id === examId);
         setSelectedExam(selected);
         setOpenModal(true);
     };
 
-    // Modal'ı kapatma fonksiyonu
     const handleCloseModal = () => {
         setOpenModal(false);
         setSelectedExam(null);
     };
 
-    // Sınavı silmek için fonksiyon
     const handleDeleteExam = async (examId) => {
         try {
-            await axios.delete(`http://localhost:5000/api/Exam/${examId}`);
-            setExams(exams.filter((exam) => exam.id !== examId)); // Silinen sınavı listeden çıkar
+            await deleteExam(examId); 
+            setExams(exams.filter((exam) => exam.id !== examId)); 
             alert("Sınav başarıyla silindi.");
         } catch (error) {
             console.error("Error deleting exam:", error);
@@ -92,7 +83,7 @@ const Exam = () => {
                                             color: "red",
                                         }}
                                         onClick={(e) => {
-                                            e.stopPropagation(); // Butona tıklanırken kartın tıklanmasını engelle
+                                            e.stopPropagation(); 
                                             handleDeleteExam(exam.id);
                                         }}
                                     >
@@ -101,7 +92,6 @@ const Exam = () => {
                                     <Typography variant="h6" component="h2" color="primary" gutterBottom>
                                         {exam.name}
                                     </Typography>
-                                    {/* Tarih bilgisi 'created_at' üzerinden formatlanıyor */}
                                     <Typography variant="body2" color="textSecondary">
                                         {exam.created_at ? `Tarih: ${dayjs(exam.created_at).format('DD MMMM YYYY')}` : "Tarih: Belirtilmemiş"}
                                     </Typography>

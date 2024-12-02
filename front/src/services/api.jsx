@@ -129,3 +129,22 @@ export const fetchCategories = async () => {
         throw new Error(err.message || 'Unknown error');
     }
 };
+
+// Sınavları almak için API çağrısı
+export const fetchExams = async (userId) => {
+    try {
+        const response = await axios.get(`${URL}/Exam/user/${userId}`);
+        return response.data;
+    } catch (error) {
+        throw new Error("Error fetching exams: " + error.message);
+    }
+};
+
+// Sınav silmek için API çağrısı
+export const deleteExam = async (examId) => {
+    try {
+        await axios.delete(`${URL}/Exam/${examId}`);
+    } catch (error) {
+        throw new Error("Error deleting exam: " + error.message);
+    }
+};

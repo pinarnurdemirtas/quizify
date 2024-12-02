@@ -37,10 +37,10 @@ const HomePage = () => {
                     id: question.id,
                     text: question.question_text,
                     category: question.category,
-                    options: [question.op1, question.op2, question.op3, question.op4], // Şıkları her durumda ekle
+                    options: [question.op1, question.op2, question.op3, question.op4], 
                 },
             ];
-            console.log(updatedItems); // Debug cart items
+            console.log(updatedItems); 
             return updatedItems;
         });
     };

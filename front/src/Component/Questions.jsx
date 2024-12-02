@@ -11,11 +11,10 @@ function Questions({ categoryId, handleAddToCart }) {
     const [error, setError] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState(null);
 
-    // Modal kontrolü ve form verileri için state
     const [openModal, setOpenModal] = useState(false);
     const [newQuestion, setNewQuestion] = useState({
         question_text: '',
-        question_type: '', // Seçili kategoriye göre otomatik ayarlanacak
+        question_type: '',
         category_id: categoryId,
     });
 
@@ -47,8 +46,8 @@ function Questions({ categoryId, handleAddToCart }) {
 
     const categorizedQuestions = {
         Klasik: questions.filter((q) => q.question_type === 'klasik'),
-        DogruYanlis: questions.filter((q) => q.question_type === 'dogru_yanlis'),
-        BosluDoldurma: questions.filter((q) => q.question_type === 'bosluk_doldurma'),
+        Dogru_Yanlis: questions.filter((q) => q.question_type === 'dogru_yanlis'),
+        Bosluk_Doldurma: questions.filter((q) => q.question_type === 'bosluk_doldurma'),
         Test: testQuestions,
     };
 
@@ -59,10 +58,9 @@ function Questions({ categoryId, handleAddToCart }) {
     };
 
     const handleOpenModal = () => {
-        // Modal açıldığında yeni sorunun tipi, seçilen kategoriye göre ayarlanır
         setNewQuestion((prev) => ({
             ...prev,
-            question_type: selectedCategory.toLowerCase(), // Kategori adı küçük harfli olacak şekilde atanıyor
+            question_type: selectedCategory.toLowerCase(), 
         }));
         setOpenModal(true);
     };
@@ -72,8 +70,7 @@ function Questions({ categoryId, handleAddToCart }) {
     const handleAddQuestion = async () => {
         try {
             if (newQuestion.question_type === 'test') {
-                // Test sorusu ekleme (question_type olmadan gönderim yapılır)
-                const { question_type, ...testQuestionData } = newQuestion; // question_type'ı çıkar
+                const { question_type, ...testQuestionData } = newQuestion;
                 const addedTestQuestion = await addTestQuestion({
                     ...testQuestionData,
                     op1: newQuestion.op1 || '',
@@ -83,9 +80,8 @@ function Questions({ categoryId, handleAddToCart }) {
                 });
                 setTestQuestions([...testQuestions, addedTestQuestion]);
             } else {
-                // Klasik soru ekleme (question_type dahil edilir)
                 const addedQuestion = await addQuestion(newQuestion);
-                setQuestions([...questions, addedQuestion]); // Listeye ekle
+                setQuestions([...questions, addedQuestion]); 
             }
             handleCloseModal();
             setNewQuestion({ question_text: '', question_type: '', category_id: categoryId });
@@ -160,14 +156,27 @@ function Questions({ categoryId, handleAddToCart }) {
                         ))}
                         <Button
                             variant="contained"
-                            color="primary"
                             fullWidth
-                            sx={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}                            
+                            sx={{
+                                position: 'fixed', 
+                                top: 100, 
+                                right: 40,  
+                                maxHeight: 70,
+                                maxWidth: 130,
+                                overflowY: 'auto',
+                                zIndex: 1000,  
+                                color: "black",
+                                backgroundColor: 'rgba(143,175,244,0.71)',
+                                '&:hover': { backgroundColor: 'rgba(211,211,211,0.49)' },
+                                '&:focus': { outline: 'none' },
+                                boxShadow: '0px 15px 20px #D3D3D37C',
+                            }}
                             onClick={handleOpenModal}
                             startIcon={<AddCircleIcon />}
                         >
                             Yeni Soru Ekle
                         </Button>
+
                     </Box>
                 </div>
             )}

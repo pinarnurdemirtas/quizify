@@ -23,7 +23,6 @@ const Profile = () => {
             <Card className="profile-card">
                 <CardContent>
                     <Grid container spacing={3}>
-                        {/* Sol Sütun - Profil Fotoğrafı ve Bilgiler */}
                         <Grid item xs={12} sm={6}>
                             <div className="profile-header">
                                 <Avatar
@@ -55,8 +54,6 @@ const Profile = () => {
                                 </IconButton>
                             </div>
                         </Grid>
-
-                        {/* Sağ Sütun - Diğer Bilgiler */}
                         <Grid item xs={12} sm={6}>
                             <div className="profile-detail">
                                 <Typography variant="h6">Departman</Typography>
