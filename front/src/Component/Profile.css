@@ -1,61 +1,137 @@
-.profile-container {
+﻿/* Genel ayarlar */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #6e8efb, #a777e3); /* Modern gradyan background */
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     padding: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
 }
 
-.profile-card {
-    width: 100%;
-    max-width: 800px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
+/* Profile Page */
+.profile-page {
     padding: 20px;
-}
-
-.profile-header {
+    width: 100%;
     display: flex;
     justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    /* Aynı gradyan background */
+}
+
+/* Profile Card */
+.profile-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 600px;
+    background: linear-gradient(135deg, #6e8efb, #a777e3); /* Aynı gradyan background */
+    border-radius: 50px; /* Rounded corners */
+    padding: 20px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1); /* Box shadow for depth */
+    text-align: center; /* Center text */
+}
+
+/* Avatar */
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto; /* Centers the avatar horizontally */
+    margin-top: 160px; /* Buraya ekledik, avatarı biraz daha aşağıya itecektir */
+}
+
+/* Profile Name */
+.profile-name {
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    color: #6e8efb;
+    margin-top: 20px; /* Burada da biraz boşluk ekledik */
+}
+
+
+/* Profile Info Section */
+.profile-info {
+    margin-top: 20px;
+}
+
+/* Profile Detail */
+.profile-detail {
+    display: flex;
+    align-items: center;
     margin-bottom: 20px;
 }
 
-.profile-avatar {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    border: 3px solid #3f454a; 
-}
-
-.profile-detail {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.profile-detail .MuiTypography-h6 {
-    font-weight: bold;
-    color: #555;
-}
-
-.profile-detail .MuiTypography-body1 {
+/* Profile Labels */
+.profile-label {
     font-size: 16px;
-    color: #333;
+    font-weight: 600;
+    color: #6e8efb; /* Beyaz renk */
+    width: 150px;
 }
 
-.edit-icon {
-    color: #404a55;
-    transition: color 0.3s ease;
+/* Profile Inputs */
+.profile-input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    font-size: 14px;
+    margin-left: 10px;
 }
 
-.edit-icon:hover {
-    color: #004ba0;
-}
-
-@media (max-width: 600px) {
-    .profile-card {
-        width: 100%;
+    /* Read-only input styling */
+    .profile-input[readonly] {
+        background-color: #f2f2f2; /* Light grey background for readonly inputs */
+        color: #000;
     }
+
+/* Edit Icon */
+.edit-icon {
+    margin-left: 10px;
+    color: white; /* Beyaz renk */
 }
+
+/* Button container */
+.delete-button-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* Delete Account Button */
+.delete-account-button {
+    padding: 14px;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+    /* Button Hover */
+    .delete-account-button:hover {
+        background: linear-gradient(135deg, #6e8efb, #a777e3);
+        transform: translateY(-5px);
+    }
+
+/* Error or Info Messages */
+.error-message, .info-message {
+    color: #e74c3c;
+    background: #fdecea;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
