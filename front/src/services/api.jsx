@@ -29,6 +29,26 @@ export const registerUser = async (payload) => {
     }
 };
 
+//Hesap silme API çağrısı
+export const deleteUser = async (id) => {
+    try {
+        const response = await axios.delete(`${URL}/Register/delete/${id}`);
+        return response.data;
+    } catch (error) {
+        throw error.response ? error.response.data : error.message;
+    }
+};
+
+//Hesap düzenleme API çağrısı
+export const updateUser = async (id, updatedUser) => {
+    try {
+        const response = await axios.put(`${URL}/Register/update/${id}`, updatedUser);
+        return response.data;
+    } catch (error) {
+        throw error.response ? error.response.data : error.message;
+    }
+};
+
 // Soruları almak için API çağrısı
 export const fetchQuestionsByCategory = async (categoryId) => {
     try {

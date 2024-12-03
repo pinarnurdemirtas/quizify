@@ -1,12 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, Typography, IconButton, Grid, Avatar, Button, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import { deleteUser, updateUser } from "../services/api.jsx";
 import "./Profile.css";
 
 const Profile = () => {
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user"));
+    const [isEditing, setIsEditing] = useState(false);
+    const [updatedUser, setUpdatedUser] = useState({ ...user });
 
     useEffect(() => {
         if (!user) {
@@ -14,11 +17,31 @@ const Profile = () => {
         }
     }, [user, navigate]);
 
-    const handleDeleteAccount = () => {
-        alert("Hesabınız silindi.");
-        localStorage.removeItem("user");
-        navigate("/");
+    const handleDeleteAccount = async () => {
+        if (window.confirm("Hesabınızı silmek istediğinize emin misiniz?")) {
+            try {
+                await deleteUser(user.id);
+                alert("Hesabınız silindi.");
+                localStorage.removeItem("user");
+                navigate("/");
+            } catch (error) {
+                alert(`Hata: ${error}`);
+            }
+        }
     };
+
+    const handleEditToggle = () => {
+        setIsEditing(!isEditing);
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setUpdatedUser((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+    
 
     if (!user) {
         return null;
@@ -39,81 +62,25 @@ const Profile = () => {
                         </Grid>
                         <Grid item xs={12} sm={8}>
                             <div className="profile-info">
-                                <div className="profile-detail">
-                                    <Typography className="profile-label">Email:</Typography>
-                                    <TextField
-                                        value={user?.email}
-                                        variant="outlined"
-                                        fullWidth
-                                        className="profile-input"
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
-                                    />
-                                    <IconButton className="edit-icon">
-                                        <EditIcon />
-                                    </IconButton>
-                                </div>
-                                <div className="profile-detail">
-                                    <Typography className="profile-label">Username:</Typography>
-                                    <TextField
-                                        value={user?.username}
-                                        variant="outlined"
-                                        fullWidth
-                                        className="profile-input"
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
-                                    />
-                                    <IconButton className="edit-icon">
-                                        <EditIcon />
-                                    </IconButton>
-                                </div>
-                                <div className="profile-detail">
-                                    <Typography className="profile-label">Gender:</Typography>
-                                    <TextField
-                                        value={user?.gender}
-                                        variant="outlined"
-                                        fullWidth
-                                        className="profile-input"
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
-                                    />
-                                    <IconButton className="edit-icon">
-                                        <EditIcon />
-                                    </IconButton>
-                                </div>
-                                <div className="profile-detail">
-                                    <Typography className="profile-label">Department:</Typography>
-                                    <TextField
-                                        value={user?.department}
-                                        variant="outlined"
-                                        fullWidth
-                                        className="profile-input"
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
-                                    />
-                                    <IconButton className="edit-icon">
-                                        <EditIcon />
-                                    </IconButton>
-                                </div>
-                                <div className="profile-detail">
-                                    <Typography className="profile-label">Phone Number:</Typography>
-                                    <TextField
-                                        value={user?.phone}
-                                        variant="outlined"
-                                        fullWidth
-                                        className="profile-input"
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
-                                    />
-                                    <IconButton className="edit-icon">
-                                        <EditIcon />
-                                    </IconButton>
-                                </div>
+                                {["email", "username", "gender", "department", "phone"].map((field) => (
+                                    <div key={field} className="profile-detail">
+                                        <Typography className="profile-label">{field.charAt(0).toUpperCase() + field.slice(1)}:</Typography>
+                                        <TextField
+                                            value={updatedUser[field] || ""}
+                                            variant="outlined"
+                                            fullWidth
+                                            className="profile-input"
+                                            name={field}
+                                            onChange={handleInputChange}
+                                            InputProps={{
+                                                readOnly: !isEditing,
+                                            }}
+                                        />
+                                        <IconButton className="edit-icon" onClick={handleEditToggle}>
+                                            <EditIcon />
+                                        </IconButton>
+                                    </div>
+                                ))}
                             </div>
                         </Grid>
                     </Grid>

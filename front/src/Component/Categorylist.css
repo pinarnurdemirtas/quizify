@@ -16,6 +16,7 @@
     text-align: left;
     padding: 8px;
     border: none;
+    color: white;
     background: black;
     cursor: pointer;
     font-size: 14px;
@@ -24,6 +25,7 @@
 
 .category-button:hover {
     background-color: #ddd;
+    color:black
 }
 
 .leaf-category .leaf-button {

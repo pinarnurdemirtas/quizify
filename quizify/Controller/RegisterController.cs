@@ -59,6 +59,57 @@ public class RegisterController : ControllerBase
         //Başarılı Yanıt
         return Ok("Kullanıcı başarıyla silindi.");
     }
+    
+    [HttpPut("update/{id}")]
+    public async Task<IActionResult> UpdateProfile(int id, [FromBody] User updatedUser)
+    {
+        // Kullanıcıyı ID ile bul
+        var existingUser = await _context.users.FindAsync(id);
+        if (existingUser == null)
+        {
+            return NotFound("Kullanıcı bulunamadı.");
+        }
+
+        // Kullanıcı bilgilerini güncelle
+        if (!string.IsNullOrWhiteSpace(updatedUser.username))
+        {
+            if (_context.users.Any(u => u.username == updatedUser.username && u.id != id))
+            {
+                return BadRequest("Bu kullanıcı adı başka bir kullanıcı tarafından kullanılıyor.");
+            }
+            existingUser.username = updatedUser.username;
+        }
+
+        if (!string.IsNullOrWhiteSpace(updatedUser.email))
+        {
+            if (_context.users.Any(u => u.email == updatedUser.email && u.id != id))
+            {
+                return BadRequest("Bu email başka bir kullanıcı tarafından kullanılıyor.");
+            }
+            existingUser.email = updatedUser.email;
+        }
+
+       
+
+        // Ad ve Soyad güncellemesi
+        if (!string.IsNullOrWhiteSpace(updatedUser.name))
+        {
+            existingUser.name = updatedUser.name;
+        }
+
+        if (!string.IsNullOrWhiteSpace(updatedUser.surname))
+        {
+            existingUser.surname = updatedUser.surname;
+        }
+
+        // Veritabanını güncelle
+        _context.users.Update(existingUser);
+        await _context.SaveChangesAsync();
+
+        return Ok("Profil bilgileri başarıyla güncellendi.");
+    }
+
+    
 }
 
 
