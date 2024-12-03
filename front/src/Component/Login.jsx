@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../services/api";  
 import "./Login.css";
@@ -13,7 +13,7 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         if (!username || !password) {
-            setError("Both fields are required.");
+            setError("Alanları eksiksiz doldurunuz.");
             return;
         }
         setIsLoading(true);
@@ -32,31 +32,31 @@ const Login = () => {
     return (
         <div className="login-card">
             <div className="login-form">
-                <h1 className="login-title">Welcome</h1>
+                <h1 className="login-title">Hoş Geldiniz!</h1>
                 {error && <div className="error-message">{error}</div>}
 
                 <form onSubmit={handleLogin}>
                     <input
                         type="text"
-                        placeholder="Username"
+                        placeholder="Kullanıcı Adı"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         className="l_input-field"
                     />
                     <input
                         type="password"
-                        placeholder="Password"
+                        placeholder="Şifre"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="l_input-field"
                     />
                     <button type="submit" className="login-button" disabled={isLoading}>
-                        {isLoading ? "Logging in..." : "Sign In"}
+                        {isLoading ? "Giriş Yapılıyor..." : "Giriş Yap"}
                     </button>
                 </form>
 
                 <p className="sign-up">
-                    Don't have an account? <Link to="/register" className="sign-up-link">Sign Up</Link>
+                    Yeni Hesap Oluştur <Link to="/register" className="sign-up-link">Kayıt Ol</Link>
                 </p>
             </div>
 

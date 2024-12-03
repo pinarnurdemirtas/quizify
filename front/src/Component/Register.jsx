@@ -54,14 +54,14 @@ const Register = () => {
     return (
         <div className="register-card">
             <div className="register-form">
-                <h1 className="register-title">Sıgn up</h1>
+                <h1 className="register-title">Kayıt Ekranı</h1>
                 {error && <div className="error-message">{error}</div>}
 
                 <form onSubmit={handleRegister}>
                     <div className="input-pair">
                         <input
                             type="text"
-                            placeholder="Username"
+                            placeholder="Kullanıcı Adı"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             className="input-field"
@@ -69,7 +69,7 @@ const Register = () => {
                         />
                         <input
                             type="password"
-                            placeholder="Password"
+                            placeholder="Şifre"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className="input-field"
@@ -79,7 +79,7 @@ const Register = () => {
                     <div className="input-pair">
                         <input
                             type="email"
-                            placeholder="Email"
+                            placeholder="E-posta"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className="input-field"
@@ -87,7 +87,7 @@ const Register = () => {
                         />
                         <input
                             type="text"
-                            placeholder="Department"
+                            placeholder="Bölüm"
                             value={department}
                             onChange={(e) => setDepartment(e.target.value)}
                             className="input-field"
@@ -97,7 +97,7 @@ const Register = () => {
                     <div className="input-pair">
                         <input
                             type="text"
-                            placeholder="Name"
+                            placeholder="İsim"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             className="input-field"
@@ -105,7 +105,7 @@ const Register = () => {
                         />
                         <input
                             type="text"
-                            placeholder="Surname"
+                            placeholder="Soyisim"
                             value={surname}
                             onChange={(e) => setSurname(e.target.value)}
                             className="input-field"
@@ -115,7 +115,7 @@ const Register = () => {
                     <div className="input-pair">
                         <input
                             type="tel"
-                            placeholder="Phone"
+                            placeholder="Telefon"
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
                             className="input-field"
@@ -127,14 +127,14 @@ const Register = () => {
                             className="input-field"
                             required
                         >
-                            <option value="">Select Gender</option>
+                            <option value="">Cinsiyet</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                             <option value="other">Other</option>
                         </select>
                     </div>
 
-                    <button type="submit" className="register-button">Sign Up</button>
+                    <button type="submit" className="register-button">Kayıt Ol</button>
                 </form>
             </div>
         </div>
