@@ -145,6 +145,7 @@ export const deleteExam = async (examId) => {
     try {
         await axios.delete(`${URL}/Exam/${examId}`);
     } catch (error) {
+        console.error("Error deleting exam:", error); // Tüm hata detaylarını göster
         throw new Error("Error deleting exam: " + error.message);
     }
 };

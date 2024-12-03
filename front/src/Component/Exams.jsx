@@ -50,6 +50,11 @@ const Exam = () => {
             console.error("Error deleting exam:", error);
             alert("Sınav silinirken bir hata oluştu.");
         }
+        console.log("Exam ID:", examId);
+        if (!examId) {
+            throw new Error("Exam ID is required.");
+        }
+
     };
 
     return (

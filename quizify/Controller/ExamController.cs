@@ -76,8 +76,12 @@ public class ExamController : ControllerBase
         var exam = await _context.Exam.FindAsync(id);
         if (exam == null)
         {
-            return NotFound("Sınav bulunamadı.");
+            return NotFound(new { Message = "Exam not found" });
         }
+
+        _context.Exam.Remove(exam);
+        await _context.SaveChangesAsync();
+
 
         // İlgili soruları sil
         var examQuestions = await _context.ExamQuestions
@@ -86,10 +90,10 @@ public class ExamController : ControllerBase
         _context.ExamQuestions.RemoveRange(examQuestions);
 
         // Sınavı sil
-        _context.Exam.Remove(exam);
-        await _context.SaveChangesAsync();
+      
         return NoContent();
     }
+
     
     [HttpPost("upload")]
     public async Task<IActionResult> Upload(IFormFile file)
