@@ -1,7 +1,7 @@
 ﻿/* Genel ayarlar */
 body {
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #6e8efb, #a777e3); /* Modern gradyan background */
+    background: linear-gradient(to left, #000000, #3533cd); /* Sağdan sola geçiş */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -18,7 +18,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    background: linear-gradient(to left, #000000, #3533cd); /* Sağdan sola geçiş */
     /* Aynı gradyan background */
 }
 
@@ -28,7 +28,7 @@ body {
     flex-direction: column;
     width: 100%;
     max-width: 600px;
-    background: linear-gradient(135deg, #6e8efb, #a777e3); /* Aynı gradyan background */
+    background: linear-gradient(to left, #000000, #3533cd); /* Sağdan sola geçiş */
     border-radius: 50px; /* Rounded corners */
     padding: 20px;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1); /* Box shadow for depth */
@@ -52,7 +52,7 @@ body {
     font-size: 24px;
     font-weight: 700;
     text-align: center;
-    color: #6e8efb;
+    color: #000000;
     margin-top: 20px; /* Burada da biraz boşluk ekledik */
 }
 
@@ -73,7 +73,7 @@ body {
 .profile-label {
     font-size: 16px;
     font-weight: 600;
-    color: #6e8efb; /* Beyaz renk */
+    color: #3533cd; /* Beyaz renk */
     width: 150px;
 }
 
@@ -108,7 +108,7 @@ body {
 /* Delete Account Button */
 .delete-account-button {
     padding: 14px;
-    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    background: linear-gradient(to left, #000000, #3533cd); /* Sağdan sola geçiş */
     color: white;
     border: none;
     border-radius: 12px;
@@ -120,7 +120,7 @@ body {
 
     /* Button Hover */
     .delete-account-button:hover {
-        background: linear-gradient(135deg, #6e8efb, #a777e3);
+        background: linear-gradient(to left, #3533cd, #000000); /* Sağdan sola geçiş */
         transform: translateY(-5px);
     }
 

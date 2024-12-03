@@ -106,7 +106,7 @@ function Questions({ categoryId, handleAddToCart }) {
                             onClick={() => handleCategoryClick(category)}
                             sx={{
                                 color: "black",
-                                backgroundColor: 'rgba(211,211,211,0.49)',
+                                backgroundColor: 'white',
                                 '&:hover': { backgroundColor: '#010b2c', color:"white" },
                                 '&:focus': { outline: 'none' },
                                 boxShadow: '0px 5px 10px #3533cd',

@@ -1,6 +1,5 @@
 .categories-container {
     width: 200px;
-    background: #f4f4f4;
     padding: 10px;
     height: 100vh;
     overflow-y: auto;
@@ -17,7 +16,7 @@
     text-align: left;
     padding: 8px;
     border: none;
-    background: rgba(216, 214, 216, 0.44);
+    background: white;
     cursor: pointer;
     font-size: 14px;
     transition: background-color 0.3s;

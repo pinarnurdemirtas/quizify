@@ -59,7 +59,7 @@ const Exam = () => {
 
     return (
         <div style={{ padding: "2rem", overflowY: "auto", maxHeight: "calc(100vh - 100px)" }}>
-            <Typography variant="h4" align="center" color="primary" gutterBottom>
+            <Typography variant="h4" align="center" color="white" gutterBottom>
                 Tüm Sınavlar
             </Typography>
             <Grid container spacing={3} justifyContent="center">

@@ -79,7 +79,7 @@ const HomePage = () => {
                                     handleAddToCart={handleAddToCart} 
                                 />
                             ) : (
-                                <p>Lütfen bir kategori seçin.</p>
+                                <p style={{color:"white"}}>Lütfen bir kategori seçin.</p>
                             )}
                         </div>
                     </div>

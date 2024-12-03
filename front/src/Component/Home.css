@@ -4,7 +4,7 @@
     flex-direction: column;
     height: 100vh;
     width: 100vw;
-    background-color: #f8f9fa; /* Hafif gri arka plan */
+    background: linear-gradient(to left, #000000, #3533cd); /* Sağdan sola geçiş */
     overflow-y: hidden; /* Yatay taşmayı kapat */
 
 }

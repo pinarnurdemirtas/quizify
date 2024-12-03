@@ -102,11 +102,21 @@ function Cart({ cartItems, open, onClose, onRemove, onComplete }) {
 
                 <Button
                     variant="contained"
-                    sx={{ backgroundColor: "#94a4fa", color: "black", width: '100%', marginTop: '20px' }}
+                    sx={{
+                        background: "linear-gradient(to left, #000000, #3533cd)",
+                        color: "white",
+                        width: '100%',
+                        marginTop: '20px',
+                        transition: "background 0.5s",
+                        "&:hover": {
+                            background: "linear-gradient(to right, #000000, #3533cd)",
+                        },
+                    }}
                     onClick={handleOpenModal}
                 >
                     Sınav Oluştur
                 </Button>
+
             </div>
 
             {/* Modal - Sınav Adı Girme */}
