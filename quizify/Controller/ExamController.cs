@@ -4,11 +4,15 @@ using quizify.Models;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
+
 namespace quizify.Controller;
 
 
 [ApiController]
 [Route("api/[controller]")]
+
+
 public class ExamController : ControllerBase
 {
     private readonly QuizifyDbContext _context;
@@ -46,7 +50,9 @@ public class ExamController : ControllerBase
         return CreatedAtAction(nameof(GetExamById), new { id = newExam.Id }, newExam);
     }
 
+    
     [HttpGet("{id}")]
+    [Authorize]
     public async Task<IActionResult> GetExamById(int id)
     {
         var exam = await _context.Exam.FindAsync(id);
@@ -58,6 +64,8 @@ public class ExamController : ControllerBase
     }
 
     [HttpGet("user/{userId}")]
+    [Authorize]
+
     public async Task<IActionResult> GetExamsByUserId(int userId)
     {
         var exams = await _context.Exam
@@ -71,6 +79,8 @@ public class ExamController : ControllerBase
     }
     
     [HttpDelete("{id}")]
+    [Authorize]
+
     public async Task<IActionResult> DeleteExam(int id)
     {
         var exam = await _context.Exam.FindAsync(id);
@@ -96,22 +106,21 @@ public class ExamController : ControllerBase
 
     
     [HttpPost("upload")]
-    public async Task<IActionResult> Upload(IFormFile file)
-    {
-        if (file == null || file.Length == 0)
-            return BadRequest("Yüklenecek bir dosya bulunamadı.");
-        
-        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
-        if (!Directory.Exists(uploadsFolder))
-            Directory.CreateDirectory(uploadsFolder);
-        var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-        var filePath = Path.Combine(uploadsFolder, fileName);
-        using (var stream = new FileStream(filePath, FileMode.Create))
+        public async Task<IActionResult> Upload(IFormFile file)
         {
-            await file.CopyToAsync(stream);
+            if (file == null || file.Length == 0)
+                return BadRequest("Yüklenecek bir dosya bulunamadı.");
+            
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
+            if (!Directory.Exists(uploadsFolder))
+                Directory.CreateDirectory(uploadsFolder);
+            var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+            var filePath = Path.Combine(uploadsFolder, fileName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            var fileUrl = $"{Request.Scheme}://{Request.Host}/uploads/{fileName}";
+            return Ok(new { url = fileUrl });
         }
-        var fileUrl = $"{Request.Scheme}://{Request.Host}/uploads/{fileName}";
-        return Ok(new { url = fileUrl });
-    }
 }
-

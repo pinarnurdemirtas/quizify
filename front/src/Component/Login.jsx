@@ -2,6 +2,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../services/api";  
 import "./Login.css";
+import {Token} from "@mui/icons-material";
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -22,6 +23,7 @@ const Login = () => {
             localStorage.setItem("token", data.token);
             localStorage.setItem("user", JSON.stringify(data.user));
             navigate("/home");
+            console.log(data.token);
         } catch (err) {
             setError(err.message);
         } finally {

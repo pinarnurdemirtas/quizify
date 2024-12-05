@@ -4,7 +4,7 @@ const URL = "http://localhost:5000/api";
 
 //Login API çağrısı
 export const loginUser = async (payload) => {
-    const loginUrl = `${URL}/Login/login`; 
+    const loginUrl = `${URL}/Users/login`; 
     try {
         const response = await axios.post(loginUrl, payload, {
             headers: {
@@ -129,12 +129,18 @@ export const uploadPdf = async (pdfBlob) => {
 // Sınav verisini kaydetmek için API çağrısı
 export const saveExam = async (examData) => {
     try {
-        await axios.post(`${URL}/Exam`, examData);
+        const token = localStorage.getItem('token'); // Token'ı localStorage'dan al
+        await axios.post(`${URL}/Exam`, examData, {
+            headers: {
+                Authorization: `Bearer ${token}`, // Token'ı başlığa ekle
+            }
+        });
         console.log('Exam saved successfully!');
     } catch (error) {
         throw new Error('There was an error saving the exam: ' + (error.response?.data || error.message));
     }
 };
+
 
 // Kategorileri almak için API çağrısı
 export const fetchCategories = async () => {
@@ -150,20 +156,34 @@ export const fetchCategories = async () => {
     }
 };
 
+
+
 // Sınavları almak için API çağrısı
-export const fetchExams = async (userId) => {
+export const fetchExams = async (userId, token) => {
     try {
-        const response = await axios.get(`${URL}/Exam/user/${userId}`);
+        const token = localStorage.getItem('token'); // Token'ı localStorage'dan al
+        const response = await axios.get(`${URL}/Exam/user/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`, // Token'ı başlığa ekliyoruz
+            }
+        });
         return response.data;
     } catch (error) {
         throw new Error("Error fetching exams: " + error.message);
     }
 };
 
+
+
 // Sınav silmek için API çağrısı
 export const deleteExam = async (examId) => {
     try {
-        await axios.delete(`${URL}/Exam/${examId}`);
+        const token = localStorage.getItem('token'); // Token'ı localStorage'dan al
+        await axios.delete(`${URL}/Exam/${examId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`, // Token'ı başlığa ekliyoruz
+            }
+        })
     } catch (error) {
         console.error("Error deleting exam:", error); // Tüm hata detaylarını göster
         throw new Error("Error deleting exam: " + error.message);

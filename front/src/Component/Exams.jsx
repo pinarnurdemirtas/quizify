@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, Typography, Grid, CardActionArea, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import dayjs from "dayjs"; 
-import DeleteIcon from "@mui/icons-material/Delete"; 
-import { fetchExams, deleteExam } from "../services/api.jsx"; 
+import dayjs from "dayjs";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { fetchExams, deleteExam } from "../services/api.jsx";
 
 const Exam = () => {
     const [exams, setExams] = useState([]);
-    const [selectedExam, setSelectedExam] = useState(null); 
-    const [openModal, setOpenModal] = useState(false); 
+    const [selectedExam, setSelectedExam] = useState(null);
+    const [openModal, setOpenModal] = useState(false);
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user"));
 
@@ -21,14 +21,15 @@ const Exam = () => {
     useEffect(() => {
         const getExams = async () => {
             try {
-                const examsData = await fetchExams(userId);
-                setExams(examsData);
+                const examsData = await fetchExams(userId);  // fetchExams fonksiyonunu burada çağır
+                setExams(examsData);  // Veriyi state'e kaydet
             } catch (error) {
                 console.error("Error fetching exams:", error);
             }
         };
-        getExams();
-    }, [userId]);
+
+        getExams();  // API çağrısını tetikle
+    }, [userId]);  // userId değiştiğinde tekrar çağrı yapılır
 
     const handleExamClick = (examId) => {
         const selected = exams.find((exam) => exam.id === examId);
@@ -43,8 +44,8 @@ const Exam = () => {
 
     const handleDeleteExam = async (examId) => {
         try {
-            await deleteExam(examId); 
-            setExams(exams.filter((exam) => exam.id !== examId)); 
+            await deleteExam(examId);
+            setExams(exams.filter((exam) => exam.id !== examId));
             alert("Sınav başarıyla silindi.");
         } catch (error) {
             console.error("Error deleting exam:", error);
@@ -88,7 +89,7 @@ const Exam = () => {
                                             color: "red",
                                         }}
                                         onClick={(e) => {
-                                            e.stopPropagation(); 
+                                            e.stopPropagation();
                                             handleDeleteExam(exam.id);
                                         }}
                                     >
