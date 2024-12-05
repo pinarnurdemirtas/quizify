@@ -12,6 +12,12 @@ builder.Services.AddDbContext<QuizifyDbContext>(options =>
 
 
 builder.Services.AddScoped<quizify.Security>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IExamRepository, ExamRepository>();
+builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
+builder.Services.AddScoped<ITestQuestionRepository, TestQuestionRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddAuthentication(options =>
@@ -42,6 +48,7 @@ builder.Services.AddCors(options =>
 // Diğer servisleri ekliyoruz
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerGen(c =>
 {
     // Swagger'a JWT Authentication ekliyoruz
