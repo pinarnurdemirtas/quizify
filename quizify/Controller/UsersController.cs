@@ -95,5 +95,24 @@ namespace quizify.Controller
 
             return Ok("Kullanıcı başarıyla silindi.");
         }
+        
+        
+        // Kullanıcı bilgileri düzenleme (Update)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] User user)
+        {
+            if (id != user.id)
+            {
+                return BadRequest("User ID mismatch.");
+            }
+
+            var result = await _userRepository.UpdateUserAsync(user);
+            if (!result)
+            {
+                return NotFound($"User with ID {id} not found.");
+            }
+
+            return Ok("User updated successfully.");
+        }
     }
 }

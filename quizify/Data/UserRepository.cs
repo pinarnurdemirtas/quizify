@@ -10,6 +10,8 @@ namespace quizify.Data
         Task<User> GetUserByIdAsync(int id);
         Task<bool> AddUserAsync(User user);
         Task<bool> RemoveUserAsync(int id);
+        Task<bool> UpdateUserAsync(User user);
+
         Task<bool> SaveChangesAsync();
     }
 
@@ -46,6 +48,24 @@ namespace quizify.Data
             _context.users.Remove(user);
             return await SaveChangesAsync();
         }
+        
+        public async Task<bool> UpdateUserAsync(User user)
+        {
+            var existingUser = await GetUserByIdAsync(user.id);
+            if (existingUser == null) return false;
+
+            existingUser.username = user.username;
+            existingUser.email = user.email;
+            existingUser.gender = user.gender; 
+            existingUser.name = user.name;
+            existingUser.surname = user.surname;
+            existingUser.department = user.department;
+            existingUser.phone = user.phone;
+
+            _context.users.Update(existingUser);
+            return await SaveChangesAsync();
+        }
+
 
         public async Task<bool> SaveChangesAsync()
         {
