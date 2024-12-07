@@ -1,0 +1,83 @@
+/* Genel Konteyner */
+.container {
+    padding: 20px;
+    background-color: #f9f9f9; /* Açık gri arka plan */
+    border-radius: 10px; /* Yuvarlatılmış köşeler */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+    position: relative; /* Butonları bu konteyner içinde hizalamak için */
+}
+
+/* Kategori Butonları */
+.category-button {
+    color: #010b2c; /* Koyu metin rengi */
+    background-color: #f9f9f9; /* Açık gri arka plan */
+    padding: 12px 18px; /* Genişletilmiş buton boyutu */
+    font-size: 16px;
+    border-radius: 10px; /* Yuvarlatılmış köşeler */
+    border: 1px solid #ccc; /* Açık gri border */
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1); /* Gölgeler */
+    text-transform: capitalize;
+    transition: all 0.3s ease; /* Hover efekti için geçiş */
+}
+
+.category-button:hover {
+    background-color: #010b2c; /* Koyu mavi arka plan */
+    color: #ffffff; /* Beyaz metin rengi */
+    border-color: #010b2c; /* Sınır rengini koyulaştır */
+}
+
+/* "Yeni Soru Ekle" Butonu */
+.add-button {
+    position: absolute;
+    top: 120px; /* Üstten biraz daha aşağıya çekildi */
+    right: 40px;
+    z-index: 1000;
+    max-width: 150px; /* Daha geniş buton */
+    padding: 12px;
+    font-size: 16px; /* Büyük font */
+    text-align: center;
+    color: white;
+    background-color: #010b2c; /* Koyu mavi */
+    box-shadow: 0px 15px 20px rgba(211, 211, 211, 0.49); /* Gölge */
+    border-radius: 12px; /* Yuvarlatılmış köşeler */
+    transition: all 0.3s ease; /* Geçiş efekti */
+}
+
+.add-button:hover {
+    background-color: rgba(211, 211, 211, 0.49); /* Hoverda açık gri */
+    color: #010b2c; /* Metin rengi koyu mavi */
+    transform: scale(1.05); /* Hoverda büyütme efekti */
+}
+
+/* Modal Stili */
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 450px; /* Daha geniş modal */
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 12px; /* Yuvarlatılmış köşeler */
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease; /* Modalda geçiş efekti */
+}
+
+.modal:hover {
+    box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.3); /* Hoverda gölgeyi artır */
+}
+
+/* Soru Kartı */
+.card {
+    margin-bottom: 20px;
+    padding: 20px; /* Daha geniş padding */
+    border-radius: 15px; /* Yuvarlak köşeler */
+    background-color: #f8f8f8; /* Açık gri arka plan */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Gölgeleme */
+    transition: all 0.3s ease; /* Geçiş efekti */
+}
+
+.card:hover {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Hoverda daha belirgin gölge */
+    transform: translateY(-5px); /* Hoverda kartı hafif yükselt */
+}

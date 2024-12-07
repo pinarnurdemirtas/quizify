@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import {Card, CardContent, Typography, Grid, Paper, Divider, Button, Box, Modal, TextField, IconButton} from '@mui/material';
+import { Card, CardContent, Typography, Grid, Paper, Divider, Button, Box, Modal, TextField, IconButton } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CloseIcon from '@mui/icons-material/Close';
 import { fetchQuestionsByCategory, fetchTestQuestionsByCategory, addQuestion, addTestQuestion } from '../services/api';
+import './Question.css'; 
 
 function Questions({ categoryId, handleAddToCart }) {
     const [questions, setQuestions] = useState([]);
@@ -18,10 +19,12 @@ function Questions({ categoryId, handleAddToCart }) {
         category_id: categoryId,
     });
 
+    // API'den veri çekme işlemi
     useEffect(() => {
         if (!categoryId) return;
         setLoading(true);
         setError(null);
+
         const getQuestions = async () => {
             try {
                 const fetchedQuestions = await fetchQuestionsByCategory(categoryId);
@@ -30,6 +33,7 @@ function Questions({ categoryId, handleAddToCart }) {
                 setError(err.message);
             }
         };
+
         const getTestQuestions = async () => {
             try {
                 const fetchedTestQuestions = await fetchTestQuestionsByCategory(categoryId);
@@ -40,19 +44,21 @@ function Questions({ categoryId, handleAddToCart }) {
                 setLoading(false);
             }
         };
+
         getQuestions();
         getTestQuestions();
     }, [categoryId]);
 
     const categorizedQuestions = {
         Klasik: questions.filter((q) => q.question_type === 'klasik'),
-        Dogru_Yanlis: questions.filter((q) => q.question_type === 'dogru_yanlis'),
-        Bosluk_Doldurma: questions.filter((q) => q.question_type === 'bosluk_doldurma'),
+        DogruYanlis: questions.filter((q) => q.question_type === 'dogru_yanlis'),
+        BoslukDoldurma: questions.filter((q) => q.question_type === 'bosluk_doldurma'),
         Test: testQuestions,
     };
 
     const categories = Object.keys(categorizedQuestions);
 
+    // Kategoriyi seçme işlemi
     const handleCategoryClick = (category) => {
         setSelectedCategory(category);
     };
@@ -90,14 +96,16 @@ function Questions({ categoryId, handleAddToCart }) {
         }
     };
 
-
-
-
     if (loading) return <div>Loading questions...</div>;
     if (error) return <div>Error: {error}</div>;
 
+    // Başlıkları boşluklu hale getirme fonksiyonu
+    const formatCategoryName = (category) =>
+        category.replace(/([a-z])([A-Z])/g, '$1 $2'); // "DogruYanlis" -> "Doğru Yanlış"
+
     return (
-        <div>
+        <div className="container">
+            {/* Kategori butonları */}
             <Grid container spacing={2} justifyContent="center" sx={{ marginBottom: 3, paddingTop: 5 }}>
                 {categories.map((category) => (
                     <Grid item xs={12} sm={3} md={2} key={category}>
@@ -105,82 +113,79 @@ function Questions({ categoryId, handleAddToCart }) {
                             variant="contained"
                             fullWidth
                             onClick={() => handleCategoryClick(category)}
-                            sx={{
-                                color: "black",
-                                backgroundColor: 'white',
-                                '&:hover': { backgroundColor: '#010b2c', color:"white" },
-                                '&:focus': { outline: 'none' },
-                                boxShadow: '0px 5px 10px #3533cd',
-                            }}
+                            className="category-button" // CSS sınıfını ekledik
                         >
-                            {category.charAt(0).toUpperCase() + category.slice(1)}
+                            {formatCategoryName(category)} {/* Başlıkları boşluklu yaz */}
                         </Button>
                     </Grid>
                 ))}
             </Grid>
             <Divider sx={{ marginY: 2 }} />
-            {selectedCategory && categorizedQuestions[selectedCategory].length > 0 && (
-                <div>
-                    <Box sx={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}>
-                        {categorizedQuestions[selectedCategory].map((question) => (
-                            <Box key={question.id} sx={{ marginBottom: 3 }}>
-                                <Paper elevation={5} sx={{ borderRadius: '16px', overflow: 'hidden' }}>
-                                    <Card sx={{ width: '100%', margin: 'auto', boxShadow: 3 }}>
-                                        <CardContent>
-                                            <Typography variant="body2" color="textSecondary">
-                                                {question.question_text}
-                                            </Typography>
-                                            {selectedCategory === 'Test' && (
-                                                <div>
-                                                    <div><strong>A.</strong> {question.op1}</div>
-                                                    <div><strong>B.</strong> {question.op2}</div>
-                                                    <div><strong>C.</strong> {question.op3}</div>
-                                                    <div><strong>D.</strong> {question.op4}</div>
-                                                </div>
-                                            )}
-                                        </CardContent>
-                                        <Box sx={{ display: 'flex', justifyContent: 'end' }}>
-                                            <Button
-                                                size="large"
-                                                sx={{
-                                                    color: "#010b2c",
-                                                    '&:focus': { outline: 'none' },
-                                                }}
-                                                onClick={() => handleAddToCart(question)}
-                                                startIcon={<AddCircleIcon />}
-                                            >
-                                            </Button>
-                                        </Box>
-                                    </Card>
-                                </Paper>
-                            </Box>
-                        ))}
-                        <Button
-                            variant="contained"
-                            fullWidth
-                            sx={{
-                                position: 'fixed',
-                                top: 100,
-                                right: 40,
-                                maxHeight: 70,
-                                maxWidth: 130,
-                                overflowY: 'auto',
-                                zIndex: 1000,
-                                color: "white",
-                                backgroundColor: '#010b2c',
-                                '&:hover': { backgroundColor: 'rgba(211,211,211,0.49)', color: "#010b2c" },
-                                '&:focus': { outline: 'none' },
-                                boxShadow: '0px 15px 20px #D3D3D37C',
-                            }}
-                            onClick={handleOpenModal}
-                            startIcon={<AddCircleIcon />}
-                        >
-                            Yeni Soru Ekle
-                        </Button>
 
-                    </Box>
-                </div>
+            {/* Seçilen kategoriye ait soruları listeleme */}
+            {selectedCategory && categorizedQuestions[selectedCategory].length > 0 && (
+                <Box sx={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}>
+                    {categorizedQuestions[selectedCategory].map((question) => (
+                        <Box key={question.id} sx={{ marginBottom: 3 }}>
+                            <Paper elevation={5} sx={{ borderRadius: '16px', overflow: 'hidden' }}>
+                                <Card sx={{ width: '100%', margin: 'auto', boxShadow: 3 }}>
+                                    <CardContent>
+                                        <Typography variant="body2" color="textSecondary">
+                                            {question.question_text}
+                                        </Typography>
+                                        {selectedCategory === 'Test' && (
+                                            <div>
+                                                <div><strong>A.</strong> {question.op1}</div>
+                                                <div><strong>B.</strong> {question.op2}</div>
+                                                <div><strong>C.</strong> {question.op3}</div>
+                                                <div><strong>D.</strong> {question.op4}</div>
+                                            </div>
+                                        )}
+                                    </CardContent>
+                                    <Box sx={{ display: 'flex', justifyContent: 'end' }}>
+                                        <Button
+                                            size="large"
+                                            sx={{
+                                                color: "#010b2c",
+                                                '&:focus': { outline: 'none' },
+                                            }}
+                                            onClick={() => handleAddToCart(question)}
+                                            startIcon={<AddCircleIcon />}
+                                        >
+                                        </Button>
+                                    </Box>
+                                </Card>
+                            </Paper>
+                        </Box>
+                    ))}
+
+                    {/* Yeni soru ekleme butonu */}
+                    <Button
+                        variant="contained"
+                        fullWidth
+                        sx={{
+                            position: 'fixed',
+                            top: 100,
+                            right: 40,
+                            maxHeight: 70,
+                            maxWidth: 130,
+                            overflowY: 'auto',
+                            zIndex: 1000,
+                            color: "white",
+                            backgroundColor: '#010b2c',
+                            '&:hover': { backgroundColor: 'rgba(211,211,211,0.49)', color: "#010b2c" },
+                            '&:focus': { outline: 'none' },
+                            boxShadow: '0px 15px 20px #D3D3D37C',
+                        }}
+                        onClick={handleOpenModal}
+                        startIcon={<AddCircleIcon />}
+                    >
+                        Yeni Soru Ekle
+                    </Button>
+                </Box>
             )}
+
+            {/* Modal (Yeni Soru Ekleme) */}
             <Modal
                 open={openModal}
                 onClose={handleCloseModal}
@@ -263,7 +268,6 @@ function Questions({ categoryId, handleAddToCart }) {
                     </Button>
                 </Box>
             </Modal>
-
         </div>
     );
 }
