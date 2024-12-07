@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AppBar, Toolbar, Typography, Button, IconButton } from "@mui/material";
+import { AppBar, Toolbar, Typography, Button, IconButton, Snackbar, Alert } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Categories from "./CategoryList";
@@ -14,6 +14,7 @@ const HomePage = () => {
     const [selectedCategoryId, setSelectedCategoryId] = useState(null);
     const [cartItems, setCartItems] = useState([]); 
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
 
     const navigate = (page) => {
         setCurrentPage(page);
@@ -31,20 +32,45 @@ const HomePage = () => {
 
     const handleAddToCart = (question) => {
         setCartItems((prevItems) => {
+            // Sepetteki sorular arasında, eklemeye çalıştığın soru var mı diye kontrol et
+            const isQuestionInCart = prevItems.some(item => item.text === question.question_text);
+
+            if (isQuestionInCart) {
+                setSnackbar({
+                    open: true,
+                    message: 'Bu soru zaten sepette!',
+                    severity: 'warning',
+                });
+                return prevItems;  // Eğer soru zaten sepetteyse, listeyi değiştirme
+            }
+
+            // Soru sepette değilse, yeni soru ekle
             const updatedItems = [
                 ...prevItems,
                 {
                     id: question.id,
                     text: question.question_text,
                     category: question.category,
-                    options: [question.op1, question.op2, question.op3, question.op4], 
+                    options: [question.op1, question.op2, question.op3, question.op4],
                 },
             ];
-            console.log(updatedItems); 
+
+            setSnackbar({
+                open: true,
+                message: 'Soru sepete başarıyla eklendi!',
+                severity: 'success',
+            });
+
+            console.log(updatedItems);
             return updatedItems;
         });
     };
 
+
+
+    const handleCloseSnackbar = () => {
+        setSnackbar({ ...snackbar, open: false });
+    };
 
     const handleDrawerToggle = () => {
         setDrawerOpen(!drawerOpen);
@@ -129,6 +155,19 @@ const HomePage = () => {
                 onClose={handleDrawerToggle}
                 onRemove={handleRemoveFromCart}
             />
+
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={1000} 
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                sx={{ zIndex: 1500 }}  
+            >
+                <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
+
         </div>
     );
 };

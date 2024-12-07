@@ -1,39 +1,55 @@
 .categories-container {
-    width: 200px;
-    padding: 10px;
+    width: 220px; /* Genişlik biraz arttırıldı */
+    padding: 15px; /* Padding arttırıldı */
     height: 100vh;
     overflow-y: auto;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Daha yumuşak ve geniş gölge */
+    border-radius: 8px; /* Yuvarlatılmış köşeler */
+    transition: all 0.3s ease-in-out; /* Hover için geçiş animasyonu */
 }
 
+
 .category-container {
-    margin-bottom: 10px;
+    margin-bottom: 15px; /* Kategori arasındaki boşluk artırıldı */
 }
 
 .category-button {
     width: 100%;
     height: 68px;
     text-align: left;
-    padding: 8px;
+    padding: 12px;
     border: none;
     color: white;
-    background: black;
+    background: #1e1e1e; 
+    font-size: 16px; /* Font büyüklüğü artırıldı */
+    font-family: 'Arial', sans-serif;
     cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s;
+    border-radius: 8px; /* Yuvarlatılmış köşeler */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Butonlara hafif gölge */
+    transition: background-color 0.3s, transform 0.2s ease-in-out; /* Arka plan rengi ve boyut değişim animasyonu */
 }
 
 .category-button:hover {
-    background-color: #ddd;
-    color:black
+    background-color: #575757; /* Hover rengini koyulaştırdık */
+    color: #fff; /* Metni beyaz yapıyoruz */
+    transform: translateX(4px); /* Sağ kayma efekti */
+}
+
+.category-button:active {
+    transform: translateX(2px); /* Tıklama esnasında daha küçük bir kayma */
 }
 
 .leaf-category .leaf-button {
     font-weight: bold;
-    color: #3533cd;
+    color: #4a90e2; /* Mavi tonunda renk */
 }
 
 .subcategories-container {
-    padding-left: 15px;
+    padding-left: 20px; /* Sol iç boşluk arttırıldı */
     margin-top: 5px;
+    transition: all 0.3s ease; /* Alt kategorilerin gösteriminde geçiş animasyonu */
+}
+
+.subcategories-container:hover {
+    padding-left: 25px; /* Hover ile daha fazla iç boşluk */
 }

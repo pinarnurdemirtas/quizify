@@ -60,7 +60,7 @@ function Questions({ categoryId, handleAddToCart }) {
     const handleOpenModal = () => {
         setNewQuestion((prev) => ({
             ...prev,
-            question_type: selectedCategory.toLowerCase(), 
+            question_type: selectedCategory.toLowerCase(),
         }));
         setOpenModal(true);
     };
@@ -81,7 +81,7 @@ function Questions({ categoryId, handleAddToCart }) {
                 setTestQuestions([...testQuestions, addedTestQuestion]);
             } else {
                 const addedQuestion = await addQuestion(newQuestion);
-                setQuestions([...questions, addedQuestion]); 
+                setQuestions([...questions, addedQuestion]);
             }
             handleCloseModal();
             setNewQuestion({ question_text: '', question_type: '', category_id: categoryId });
@@ -89,6 +89,7 @@ function Questions({ categoryId, handleAddToCart }) {
             setError(err.message);
         }
     };
+
 
 
 
@@ -158,13 +159,13 @@ function Questions({ categoryId, handleAddToCart }) {
                             variant="contained"
                             fullWidth
                             sx={{
-                                position: 'fixed', 
-                                top: 100, 
-                                right: 40,  
+                                position: 'fixed',
+                                top: 100,
+                                right: 40,
                                 maxHeight: 70,
                                 maxWidth: 130,
                                 overflowY: 'auto',
-                                zIndex: 1000,  
+                                zIndex: 1000,
                                 color: "white",
                                 backgroundColor: '#010b2c',
                                 '&:hover': { backgroundColor: 'rgba(211,211,211,0.49)', color: "#010b2c" },

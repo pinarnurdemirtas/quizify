@@ -89,8 +89,8 @@ if (app.Environment.IsDevelopment())
 }
 app.UseCors("AllowAll");
  app.UseStaticFiles();
-app.UseAuthentication(); // Authentication middleware ekliyoruz
-app.UseAuthorization();  // Authorization middleware ekliyoruz
+app.UseAuthentication(); // Kimlik doğrulama
+app.UseAuthorization();  // Yetkilendirme
 
 app.MapControllers();
 app.Run();

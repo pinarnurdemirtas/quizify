@@ -76,7 +76,6 @@ namespace quizify.Controller
 
         // Kullanıcı silme (Delete)
         [HttpDelete("delete/{id}")]
-        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Kullanıcı ID'sini al
@@ -86,7 +85,7 @@ namespace quizify.Controller
             {
                 return Unauthorized("Bu işlemi yapmaya yetkiniz yok.");
             }
-
+    
             var result = await _userRepository.RemoveUserAsync(id);
             if (!result)
             {
