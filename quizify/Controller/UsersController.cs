@@ -43,8 +43,13 @@ namespace quizify.Controller
                 Token = token,
                 User = new
                 {
+                    user.email,
+                    user.phone,
                     user.username,
+                    user.name,
                     user.surname,
+                    user.gender,
+                    user.department,
                     user.id
                 }
             });
