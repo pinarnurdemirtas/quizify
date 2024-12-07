@@ -50,6 +50,7 @@ namespace quizify.Controller
                     user.surname,
                     user.gender,
                     user.department,
+                    user.img,
                     user.id
                 }
             });
