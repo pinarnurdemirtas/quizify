@@ -3,7 +3,7 @@ import { Card, CardContent, Typography, Grid, Paper, Divider, Button, Box, Modal
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CloseIcon from '@mui/icons-material/Close';
 import { fetchQuestionsByCategory, fetchTestQuestionsByCategory, addQuestion, addTestQuestion } from '../services/api';
-import './Question.css'; 
+import './Questions.css'; // CSS dosyasını dahil ettik
 
 function Questions({ categoryId, handleAddToCart }) {
     const [questions, setQuestions] = useState([]);
