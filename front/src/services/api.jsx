@@ -39,20 +39,16 @@ export const deleteUser = async (id) => {
     }
 };
 
-
-
 //Hesap düzenleme API çağrısı
-export const updateUser = async (userId, updatedUser) => {
+export const updateUser = async (id, updatedUser) => {
     try {
-        const response = await axios.put(`${URL}/Users/${userId}`, updatedUser);
-        return response.data; // Güncellenmiş kullanıcı bilgisi döner
+        const response = await axios.put(`${URL}/Users/${id}`, updatedUser);
+        return response.data
     } catch (error) {
-        throw error.response?.data?.message || "Güncelleme başarısız.";
+        console.error("Error response:", error.response);  // Hata cevabını yazdır
+        throw error.response ? error.response.data : error.message;
     }
 };
-
-
-
 
 
 // Soruları almak için API çağrısı

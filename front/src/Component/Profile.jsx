@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, Typography, IconButton, Grid, Avatar, Button, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import { deleteUser, updateUser } from "../services/api.jsx";
+import { updateUser, deleteUser } from "../services/api"; // updateUser fonksiyonu import edilmiştir.
 import "./Profile.css";
 
 const Profile = () => {
@@ -43,32 +43,19 @@ const Profile = () => {
     };
 
     const handleSaveChanges = async () => {
-        const completeUpdatedUser = {
-            id: user.id,  // Kullanıcının ID'sini eklediğinizden emin olun
-            password: "123",
-            username: updatedUser.username,
-            email: updatedUser.email,
-            gender: updatedUser.gender,
-            name: updatedUser.name,
-            surname: updatedUser.surname, // Surname eklenmiş olmalı
-            department: updatedUser.department,
-            phone: updatedUser.phone,
-            img: updatedUser.img,  // Eğer bir resim değişikliği varsa, img de eklenmeli
-        };
-
-        console.log(completeUpdatedUser); // Gönderilen veriyi console.log ile kontrol edin
-
         try {
-            const updatedData = await updateUser(user.id, completeUpdatedUser);
-            localStorage.setItem("user", JSON.stringify(updatedData));
-            alert("Profil başarıyla güncellendi.");
-            setIsEditing(false);
+            const result = await updateUser(user.id, updatedUser); // API'yi çağırıyoruz
+            alert("Kullanıcı başarıyla güncellendi.");
+            setIsEditing(false); // Düzenleme modunu kapatıyoruz
+            localStorage.setItem("user", JSON.stringify(updatedUser)); // Kullanıcıyı güncellenmiş olarak localStorage'a kaydediyoruz
         } catch (error) {
-            const errorMessage = typeof error === "string" ? error : error.message || "Bilinmeyen bir hata oluştu.";
-            alert(`Profil güncelleme hatası: ${errorMessage}`);
+            alert(`Hata: ${error}`);
         }
     };
 
+    if (!user) {
+        return null;
+    }
 
     return (
         <div className="profile-page">
@@ -85,7 +72,7 @@ const Profile = () => {
                         </Grid>
                         <Grid item xs={12} sm={8}>
                             <div className="profile-info">
-                                {["email", "username", "gender", "department", "phone", "name", "surname"].map((field) => (
+                                {["email", "username", "gender", "department", "phone"].map((field) => (
                                     <div key={field} className="profile-detail">
                                         <Typography className="profile-label">{field.charAt(0).toUpperCase() + field.slice(1)}:</Typography>
                                         <TextField
@@ -99,24 +86,26 @@ const Profile = () => {
                                                 readOnly: !isEditing,
                                             }}
                                         />
+                                        <IconButton className="edit-icon" onClick={handleEditToggle}>
+                                            <EditIcon />
+                                        </IconButton>
                                     </div>
                                 ))}
                             </div>
-                            {isEditing && (
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    className="save-changes-button"
-                                    onClick={handleSaveChanges}
-                                >
-                                    Save Changes
-                                </Button>
-                            )}
-                            <IconButton className="edit-icon" onClick={handleEditToggle}>
-                                <EditIcon />
-                            </IconButton>
                         </Grid>
                     </Grid>
+                    <div className="save-changes-button-container">
+                        {isEditing && (
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                className="save-changes-button"
+                                onClick={handleSaveChanges}
+                            >
+                                Save Changes
+                            </Button>
+                        )}
+                    </div>
                     <div className="delete-button-container">
                         <Button
                             variant="contained"
