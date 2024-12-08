@@ -27,7 +27,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 600px;
+    max-width: 800px;
     background: linear-gradient(to left, #000000, #3533cd); /* Sağdan sola geçiş */
     border-radius: 50px; /* Rounded corners */
     padding: 20px;
@@ -37,14 +37,14 @@ body {
 
 /* Avatar */
 .profile-avatar {
-    width: 120px;
-    height: 120px;
+    width: 180px;
+    height: 180px;
     border-radius: 50%;
     margin-bottom: 20px;
     display: block;
     margin-left: auto;
     margin-right: auto; /* Centers the avatar horizontally */
-    margin-top: 160px; /* Buraya ekledik, avatarı biraz daha aşağıya itecektir */
+    margin-top: 40px; /* Buraya ekledik, avatarı biraz daha aşağıya itecektir */
 }
 
 /* Profile Name */

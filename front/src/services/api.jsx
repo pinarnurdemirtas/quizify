@@ -20,7 +20,7 @@ export const loginUser = async (payload) => {
 
 //Register API çağrısı
 export const registerUser = async (payload) => {
-    const registerUrl = `${URL}/Register/Register`;
+    const registerUrl = `${URL}/Users/register`;
     try {
         const response = await axios.post(registerUrl, payload);
         return response.data;

@@ -51,7 +51,8 @@ namespace quizify.Controller
                     user.gender,
                     user.department,
                     user.img,
-                    user.id
+                    user.id,
+                    user.password
                 }
             });
         }
@@ -69,6 +70,9 @@ namespace quizify.Controller
 
             // Şifreyi hash'le
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(newUser.password);
+    
+            // Hash'lenmiş şifreyi kullanıcı objesine ata
+            newUser.password = hashedPassword;
 
             // Kullanıcıyı veritabanına ekle
             var result = await _userRepository.AddUserAsync(newUser);
@@ -79,6 +83,7 @@ namespace quizify.Controller
 
             return Ok("Kullanıcı başarıyla kaydedildi.");
         }
+
 
         // Kullanıcı silme (Delete)
         [HttpDelete("delete/{id}")]
