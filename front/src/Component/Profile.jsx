@@ -41,11 +41,34 @@ const Profile = () => {
             [name]: value,
         }));
     };
-    
 
-    if (!user) {
-        return null;
-    }
+    const handleSaveChanges = async () => {
+        const completeUpdatedUser = {
+            id: user.id,  // Kullanıcının ID'sini eklediğinizden emin olun
+            password: "123",
+            username: updatedUser.username,
+            email: updatedUser.email,
+            gender: updatedUser.gender,
+            name: updatedUser.name,
+            surname: updatedUser.surname, // Surname eklenmiş olmalı
+            department: updatedUser.department,
+            phone: updatedUser.phone,
+            img: updatedUser.img,  // Eğer bir resim değişikliği varsa, img de eklenmeli
+        };
+
+        console.log(completeUpdatedUser); // Gönderilen veriyi console.log ile kontrol edin
+
+        try {
+            const updatedData = await updateUser(user.id, completeUpdatedUser);
+            localStorage.setItem("user", JSON.stringify(updatedData));
+            alert("Profil başarıyla güncellendi.");
+            setIsEditing(false);
+        } catch (error) {
+            const errorMessage = typeof error === "string" ? error : error.message || "Bilinmeyen bir hata oluştu.";
+            alert(`Profil güncelleme hatası: ${errorMessage}`);
+        }
+    };
+
 
     return (
         <div className="profile-page">
@@ -62,7 +85,7 @@ const Profile = () => {
                         </Grid>
                         <Grid item xs={12} sm={8}>
                             <div className="profile-info">
-                                {["email", "username", "gender", "department", "phone"].map((field) => (
+                                {["email", "username", "gender", "department", "phone", "name", "surname"].map((field) => (
                                     <div key={field} className="profile-detail">
                                         <Typography className="profile-label">{field.charAt(0).toUpperCase() + field.slice(1)}:</Typography>
                                         <TextField
@@ -76,12 +99,22 @@ const Profile = () => {
                                                 readOnly: !isEditing,
                                             }}
                                         />
-                                        <IconButton className="edit-icon" onClick={handleEditToggle}>
-                                            <EditIcon />
-                                        </IconButton>
                                     </div>
                                 ))}
                             </div>
+                            {isEditing && (
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    className="save-changes-button"
+                                    onClick={handleSaveChanges}
+                                >
+                                    Save Changes
+                                </Button>
+                            )}
+                            <IconButton className="edit-icon" onClick={handleEditToggle}>
+                                <EditIcon />
+                            </IconButton>
                         </Grid>
                     </Grid>
                     <div className="delete-button-container">

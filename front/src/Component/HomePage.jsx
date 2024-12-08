@@ -105,7 +105,7 @@ const HomePage = () => {
                                     handleAddToCart={handleAddToCart} 
                                 />
                             ) : (
-                                <p style={{color:"white"}}>Lütfen bir kategori seçin.</p>
+                                <p style={{color:"white", fontSize:20}}>Lütfen bir kategori seçin.</p>
                             )}
                         </div>
                     </div>
