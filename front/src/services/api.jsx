@@ -42,12 +42,14 @@ export const deleteUser = async (id) => {
 //Hesap düzenleme API çağrısı
 export const updateUser = async (id, updatedUser) => {
     try {
-        const response = await axios.put(`${URL}/Register/update/${id}`, updatedUser);
-        return response.data;
+        const response = await axios.put(`${URL}/Users/${id}`, updatedUser);
+        return response.data
     } catch (error) {
+        console.error("Error response:", error.response);  // Hata cevabını yazdır
         throw error.response ? error.response.data : error.message;
     }
 };
+
 
 // Soruları almak için API çağrısı
 export const fetchQuestionsByCategory = async (categoryId) => {

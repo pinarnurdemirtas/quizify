@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, Typography, IconButton, Grid, Avatar, Button, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import { deleteUser, updateUser } from "../services/api.jsx";
+import { updateUser, deleteUser } from "../services/api"; // updateUser fonksiyonu import edilmiştir.
 import "./Profile.css";
 
 const Profile = () => {
@@ -41,7 +41,17 @@ const Profile = () => {
             [name]: value,
         }));
     };
-    
+
+    const handleSaveChanges = async () => {
+        try {
+            const result = await updateUser(user.id, updatedUser); // API'yi çağırıyoruz
+            alert("Kullanıcı başarıyla güncellendi.");
+            setIsEditing(false); // Düzenleme modunu kapatıyoruz
+            localStorage.setItem("user", JSON.stringify(updatedUser)); // Kullanıcıyı güncellenmiş olarak localStorage'a kaydediyoruz
+        } catch (error) {
+            alert(`Hata: ${error}`);
+        }
+    };
 
     if (!user) {
         return null;
@@ -84,6 +94,18 @@ const Profile = () => {
                             </div>
                         </Grid>
                     </Grid>
+                    <div className="save-changes-button-container">
+                        {isEditing && (
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                className="save-changes-button"
+                                onClick={handleSaveChanges}
+                            >
+                                Save Changes
+                            </Button>
+                        )}
+                    </div>
                     <div className="delete-button-container">
                         <Button
                             variant="contained"
