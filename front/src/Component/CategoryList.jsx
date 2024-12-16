@@ -65,10 +65,12 @@ function Categories({ onLeafCategorySelect }) {
     };
 
     return (
+        <div className="element">
         <div className="categories-container">
             <div className="parent-categories">
                 {parentCategories.map(category => renderCategory(category))}
             </div>
+        </div>
         </div>
     );
 }

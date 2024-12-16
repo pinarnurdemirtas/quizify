@@ -2,7 +2,6 @@
     width: 220px; /* Genişlik biraz arttırıldı */
     padding: 15px; /* Padding arttırıldı */
     height: 100vh;
-    overflow-y: auto;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Daha yumuşak ve geniş gölge */
     border-radius: 8px; /* Yuvarlatılmış köşeler */
     transition: all 0.3s ease-in-out; /* Hover için geçiş animasyonu */
@@ -52,4 +51,13 @@
 
 .subcategories-container:hover {
     padding-left: 25px; /* Hover ile daha fazla iç boşluk */
+}
+
+.element {
+    overflow-y: scroll; /* Kaydırma aktif */
+    scrollbar-width: none; /* Firefox için */
+}
+
+.element::-webkit-scrollbar {
+    display: none; /* Chrome, Safari ve Edge için */
 }

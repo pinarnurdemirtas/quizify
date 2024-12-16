@@ -8,19 +8,21 @@
 }
 
 /* Kategori Butonları (Doğru, Yanlış vs.) */
-.category-button {
-    color: #ffffff; /* Beyaz metin rengi */
-    background: linear-gradient(135deg, #6a11cb, #2575fc); /* Mavi ve mor geçişi */
+.category-button-q {
+    color: #000000; /* Beyaz metin rengi */
+    background: linear-gradient(135deg, #6a11cb, #2575fc); /* Tıklama sırasında daha belirgin geçiş */
     padding: 12px 18px; /* Genişletilmiş buton boyutu */
     font-size: 16px;
     border-radius: 10px; /* Yuvarlatılmış köşeler */
     border: 1px solid #ccc; /* Açık gri border */
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1); /* Hafif gölgeler */
     text-transform: capitalize;
-    transition: all 0.3s ease; /* Hover, tıklama ve focus geçiş efektleri */
+    transition: all 0.7s ease; /* Hover, tıklama ve focus geçiş efektleri */
+    width: 100%;
+    height: 52px;
 }
 
-    .category-button:hover {
+    .category-button-q:hover {
         background: linear-gradient(135deg, #2575fc, #6a11cb); /* Hoverda mavi ve mor tonları arasında geçiş */
         color: #ffffff; /* Beyaz metin rengi */
         border-color: #2575fc; /* Sınır rengini mavi yap */
@@ -28,43 +30,8 @@
         box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2); /* Gölgeyi artır */
     }
 
-    /* Tıklama (Active) Durumunda Geçiş Efekti */
-    .category-button:active {
-        background: linear-gradient(135deg, #2575fc, #6a11cb); /* Tıklama sırasında daha belirgin geçiş */
-        transform: scale(0.95); /* Tıklama sırasında butonu biraz küçült */
-        box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.3); /* Gölgeyi biraz küçült */
-    }
-
-    /* Buton Fokus Efekti */
-    .category-button:focus {
-        outline: none; /* Odak sırasında kenarlıkları kaldır */
-        box-shadow: 0px 0px 8px rgba(0, 0, 255, 0.6); /* Odaklandığında mavi gölge */
-        transform: scale(1.05); /* Odaklandığında hafif büyütme */
-    }
-
-/* "Yeni Soru Ekle" Butonu */
-.add-button {
-    position: absolute;
-    top: 500px; /* Üstten biraz daha aşağıya çekildi */
-    right: 40px;
-    z-index: 1000;
-    max-width: 150px; /* Daha geniş buton */
-    padding: 12px;
-    font-size: 16px; /* Büyük font */
-    text-align: center;
-    color: white;
-    background: linear-gradient(135deg, #ff512f, #dd2476); /* Turuncu ve pembe geçişi */
-    box-shadow: 0px 15px 20px rgba(211, 211, 211, 0.49); /* Gölge */
-    border-radius: 12px; /* Yuvarlatılmış köşeler */
-    transition: all 0.3s ease; /* Geçiş efekti */
-}
-
-    .add-button:hover {
-        background: linear-gradient(135deg, #dd2476, #ff512f); /* Hoverda daha koyu turuncu ve pembe geçiş */
-        color: #010b2c; /* Metin rengi koyu mavi */
-        transform: scale(1.05); /* Hoverda büyütme efekti */
-        box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.2); /* Gölgeyi artır */
-    }
+ 
+    
 
 /* Modal Stili */
 .modal {
@@ -96,5 +63,12 @@
     .card:hover {
         box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Hoverda daha belirgin gölge */
         transform: translateY(-5px); /* Hoverda kartı hafif yükselt */
-            
     }
+.element {
+    overflow-y: scroll; /* Kaydırma aktif */
+    scrollbar-width: none; /* Firefox için */
+}
+
+.element::-webkit-scrollbar {
+    display: none; /* Chrome, Safari ve Edge için */
+}

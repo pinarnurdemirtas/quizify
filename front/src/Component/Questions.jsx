@@ -100,6 +100,7 @@ function Questions({ categoryId, handleAddToCart }) {
     if (error) return <div>Error: {error}</div>;
 
     return (
+        <div className="element">
         <div className="container">
             {/* Kategori butonları */}
             <Grid container spacing={2} justifyContent="center" sx={{ marginBottom: 3, paddingTop: 5 }}>
@@ -109,7 +110,7 @@ function Questions({ categoryId, handleAddToCart }) {
                             variant="contained"
                             fullWidth
                             onClick={() => handleCategoryClick(category)}
-                            className="category-button"
+                            className="category-button-q"
                         >
                             {category} {/* Başlıkları sadece kategori ismi olarak yaz */}
                         </Button>
@@ -119,7 +120,7 @@ function Questions({ categoryId, handleAddToCart }) {
             <Divider sx={{ marginY: 2 }} />
 
             {/* Seçilen kategoriye ait soruları listeleme */}
-            <Box sx={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}>
+            <Box className="element" sx={{ maxHeight: 'calc(100vh - 200px)' }}>
                 {(selectedCategory ? [selectedCategory] : categories).map((category) => (
                     <div key={category}>
                         {categorizedQuestions[category].length > 0 ? (
@@ -162,30 +163,37 @@ function Questions({ categoryId, handleAddToCart }) {
                     </div>
                 ))}
             </Box>
-
+            
+            
             {/* Yeni soru ekleme butonu */}
-            <Button
-                variant="contained"
-                fullWidth
-                sx={{
-                    position: 'fixed',
-                    top: 100,
-                    right: 40,
-                    maxHeight: 70,
-                    maxWidth: 130,
-                    overflowY: 'auto',
-                    zIndex: 1000,
-                    color: "white",
-                    backgroundColor: '#010b2c',
-                    '&:hover': { backgroundColor: 'rgba(211,211,211,0.49)', color: "#010b2c" },
-                    '&:focus': { outline: 'none' },
-                    boxShadow: '0px 15px 20px #D3D3D37C',
-                }}
-                onClick={handleOpenModal}
-                startIcon={<AddCircleIcon />}
-            >
-                Yeni Soru Ekle
-            </Button>
+            {selectedCategory && (
+                <Button
+                    variant="contained"
+                    fullWidth
+                    sx={{
+                        position: 'fixed',
+                        fontSize: 12,
+                        top: 100,
+                        right: 40,
+                        maxHeight: 70,
+                        maxWidth: 110,
+                        zIndex: 1000,
+                        color: "white",
+                        backgroundColor: '#010b2c',
+                        '&:hover': {
+                            background: 'linear-gradient(135deg, #6a11cb, #2575fc)',
+                        },
+                        '&:focus': {
+                            outline: 'none'
+                        },
+                        boxShadow: '0px 3px 10px #D3D3D37C',
+                    }}
+                    onClick={handleOpenModal}
+                >
+                    Yeni Soru Ekle
+                </Button>
+            )}
+
 
             {/* Modal (Yeni Soru Ekleme) */}
             <Modal
@@ -263,13 +271,21 @@ function Questions({ categoryId, handleAddToCart }) {
                     <Button
                         variant="contained"
                         fullWidth
-                        sx={{ mt: 2 }}
+                        sx={{ color: "white",
+                            backgroundColor: '#010b2c',
+                            '&:hover': {
+                                background: 'linear-gradient(135deg, #6a11cb, #2575fc)',
+                            },
+                            '&:focus': {
+                                outline: 'none'
+                            } }}
                         onClick={handleAddQuestion}
                     >
                         Ekle
                     </Button>
                 </Box>
             </Modal>
+        </div>
         </div>
     );
 }
