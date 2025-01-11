@@ -24,13 +24,13 @@ namespace quizify.Controller
         public async Task<IActionResult> Login([FromBody] Login loginUser)
         {
             // Kullanıcıyı veritabanında buluyoruz
-            var user = await _userRepository.GetUserByUsernameAsync(loginUser.username);
+            var user = await _userRepository.GetUserByUsernameAsync(loginUser.Username);
 
             if (user == null)
                 return Unauthorized(new { message = "Invalid username or password." });
 
             // Şifreyi doğrulama
-            if (!BCrypt.Net.BCrypt.Verify(loginUser.password, user.password))
+            if (!BCrypt.Net.BCrypt.Verify(loginUser.Password, user.Password))
             {
                 return Unauthorized(new { message = "Invalid username or password." });
             }
@@ -43,16 +43,16 @@ namespace quizify.Controller
                 Token = token,
                 User = new
                 {
-                    user.email,
-                    user.phone,
-                    user.username,
-                    user.name,
-                    user.surname,
-                    user.gender,
-                    user.department,
-                    user.img,
-                    user.id,
-                    user.password
+                    user.Email,
+                    user.Phone,
+                    user.Username,
+                    user.Name,
+                    user.Surname,
+                    user.Gender,
+                    user.Department,
+                    user.Img,
+                    user.Id,
+                    user.Password
                 }
             });
         }
@@ -62,17 +62,17 @@ namespace quizify.Controller
         public async Task<IActionResult> Register([FromBody] User newUser)
         {
             // Kullanıcı adı kontrolü
-            var existingUser = await _userRepository.GetUserByUsernameAsync(newUser.username);
+            var existingUser = await _userRepository.GetUserByUsernameAsync(newUser.Username);
             if (existingUser != null)
             {
                 return BadRequest("Kullanıcı adı zaten kullanılıyor.");
             }
 
             // Şifreyi hash'le
-            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(newUser.password);
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
     
             // Hash'lenmiş şifreyi kullanıcı objesine ata
-            newUser.password = hashedPassword;
+            newUser.Password = hashedPassword;
 
             // Kullanıcıyı veritabanına ekle
             var result = await _userRepository.AddUserAsync(newUser);
@@ -111,7 +111,7 @@ namespace quizify.Controller
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] User user)
         {
-            if (id != user.id)
+            if (id != user.Id)
             {
                 return BadRequest("User ID mismatch.");
             }

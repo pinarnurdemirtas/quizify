@@ -12,7 +12,7 @@ import "./Home.css";
 const HomePage = () => {
     const [currentPage, setCurrentPage] = useState("questions");
     const [selectedCategoryId, setSelectedCategoryId] = useState(null);
-    const [cartItems, setCartItems] = useState([]); 
+    const [cartItems, setCartItems] = useState([]);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
 
@@ -32,8 +32,7 @@ const HomePage = () => {
 
     const handleAddToCart = (question) => {
         setCartItems((prevItems) => {
-            // Sepetteki sorular arasında, eklemeye çalıştığın soru var mı diye kontrol et
-            const isQuestionInCart = prevItems.some(item => item.text === question.question_text);
+            const isQuestionInCart = prevItems.some(item => item.id === question.id);
 
             if (isQuestionInCart) {
                 setSnackbar({
@@ -41,17 +40,17 @@ const HomePage = () => {
                     message: 'Bu soru zaten sepette!',
                     severity: 'warning',
                 });
-                return prevItems;  // Eğer soru zaten sepetteyse, listeyi değiştirme
+                return prevItems;
             }
 
-            // Soru sepette değilse, yeni soru ekle
             const updatedItems = [
                 ...prevItems,
                 {
                     id: question.id,
                     text: question.question_text,
-                    category: question.category,
-                    options: [question.op1, question.op2, question.op3, question.op4],
+                    questionType: question.question_type ?? "Test",
+                    answer: question.answer,
+                    options: [question.op1, question.op2, question.op3, question.op4, question.op5],
                 },
             ];
 
@@ -61,12 +60,9 @@ const HomePage = () => {
                 severity: 'success',
             });
 
-            console.log(updatedItems);
             return updatedItems;
         });
     };
-
-
 
     const handleCloseSnackbar = () => {
         setSnackbar({ ...snackbar, open: false });
@@ -77,19 +73,11 @@ const HomePage = () => {
     };
 
     const handleRemoveFromCart = (id) => {
-            setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
-        };
+        setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    };
 
-
-        const renderPage = () => {
+    const renderPage = () => {
         switch (currentPage) {
-            case "home":
-                return (
-                    <div className="content-container">
-                        <h1>Ana Sayfa</h1>
-                        <p>Hoş geldiniz! Yukarıdaki menüden bir seçim yapın.</p>
-                    </div>
-                );
             case "exams":
                 return <Exams />;
             case "profile":
@@ -102,10 +90,12 @@ const HomePage = () => {
                             {selectedCategoryId ? (
                                 <Questions
                                     categoryId={selectedCategoryId}
-                                    handleAddToCart={handleAddToCart} 
+                                    handleAddToCart={handleAddToCart}
                                 />
                             ) : (
-                                <p style={{color:"white", fontSize:20}}>Lütfen bir kategori seçin.</p>
+                                <p style={{ color: "white", fontSize: 20, textAlign: "center" }}>
+                                    Lütfen bir kategori seçin.
+                                </p>
                             )}
                         </div>
                     </div>
@@ -121,8 +111,7 @@ const HomePage = () => {
 
     return (
         <div className="homepage-container">
-            <AppBar position="static" sx={{ background: "linear-gradient(to left, #000000, #3533cd)" }}
-            >
+            <AppBar position="static" sx={{ background: "linear-gradient(to left, #000000, #3533cd)" }}>
                 <Toolbar sx={{ justifyContent: "space-between" }}>
                     <Typography variant="h6" className="app-title">
                         QUIZIFY
@@ -154,20 +143,21 @@ const HomePage = () => {
                 open={drawerOpen}
                 onClose={handleDrawerToggle}
                 onRemove={handleRemoveFromCart}
+                ModalProps={{
+                    disableEnforceFocus: true,
+                }}
             />
 
             <Snackbar
                 open={snackbar.open}
-                autoHideDuration={1000} 
+                autoHideDuration={3000}
                 onClose={handleCloseSnackbar}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                sx={{ zIndex: 1500 }}  
             >
                 <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
                     {snackbar.message}
                 </Alert>
             </Snackbar>
-
         </div>
     );
 };

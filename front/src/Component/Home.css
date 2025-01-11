@@ -42,6 +42,8 @@
     flex: 1; /* Kalan alanı doldur */
     margin-left: 16px; /* Aradaki boşluk için */
     box-sizing: border-box;
+    padding-left: 30px;
+    padding-right: 30px;
 }
 
 .categories {

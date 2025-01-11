@@ -7,6 +7,7 @@ namespace quizify.Controller
 {
     [ApiController]
     [Route("api/[controller]")]
+    
     public class ExamController : ControllerBase
     {
         private readonly IExamRepository _examRepository;
@@ -19,7 +20,7 @@ namespace quizify.Controller
         [HttpPost]
         public async Task<IActionResult> CreateExam([FromBody] ExamRequest newExamRequest)
         {
-            if (newExamRequest == null || newExamRequest.exam == null || newExamRequest.examQuestions == null)
+            if (newExamRequest == null || newExamRequest.exam == null || newExamRequest.exam_questions == null)
             {
                 return BadRequest("Exam ve ExamQuestions alanları zorunludur.");
             }

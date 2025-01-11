@@ -25,8 +25,8 @@ public class Security
         {
             Subject = new ClaimsIdentity(new[]
             {
-                new Claim("userId", user.id.ToString()), // 'userId' olarak claim ekleniyor
-                new Claim(JwtRegisteredClaimNames.Email, user.email),       // E-posta
+                new Claim("userId", user.Id.ToString()), // 'userId' olarak claim ekleniyor
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),       // E-posta
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) // Token ID
             }),
             Expires = DateTime.UtcNow.AddHours(1),

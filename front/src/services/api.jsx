@@ -70,10 +70,15 @@ export const addQuestion = async (questionData) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(questionData),
     });
+
     if (!response.ok) {
+        const errorText = await response.text();
+        console.log('Error response:', errorText); // Hata mesajını kontrol edin
         throw new Error('Soru eklenemedi!');
     }
+
     return await response.json();
+
 };
 
 
@@ -139,8 +144,9 @@ export const saveExam = async (examData) => {
         });
         console.log('Exam saved successfully!');
     } catch (error) {
-        throw new Error('There was an error saving the exam: ' + (error.response?.data || error.message));
+        console.error("Sınav oluşturma hatası:", error.response?.data || error.message);
     }
+
 };
 
 

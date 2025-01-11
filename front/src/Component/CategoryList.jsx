@@ -11,7 +11,7 @@ function Categories({ onLeafCategorySelect }) {
     useEffect(() => {
         const getCategories = async () => {
             try {
-                const data = await fetchCategories(); 
+                const data = await fetchCategories();
                 setCategories(data);
                 setLoading(false);
             } catch (err) {
@@ -31,14 +31,24 @@ function Categories({ onLeafCategorySelect }) {
         return categories.filter(category => category.parentId === parentId);
     };
 
-    const handleCategoryClick = (categoryId, isLeafCategory) => {
+    const handleCategoryClick = (categoryId, isLeafCategory, isParentCategory) => {
         if (isLeafCategory) {
-            onLeafCategorySelect(categoryId); 
+            onLeafCategorySelect(categoryId);
         } else {
-            setExpandedCategories(prev => ({
-                ...prev,
-                [categoryId]: !prev[categoryId],
-            }));
+            setExpandedCategories(prev => {
+                const updated = isParentCategory
+                    ? Object.keys(prev).reduce((acc, key) => {
+                        if (categories.find(cat => cat.id === parseInt(key)).parentId !== null) {
+                            acc[key] = prev[key];
+                        }
+                        return acc;
+                    }, {})
+                    : { ...prev };
+                return {
+                    ...updated,
+                    [categoryId]: !prev[categoryId],
+                };
+            });
         }
     };
 
@@ -46,12 +56,13 @@ function Categories({ onLeafCategorySelect }) {
         const subcategories = getSubcategories(category.id);
         const isExpanded = expandedCategories[category.id];
         const isLeafCategory = subcategories.length === 0;
+        const isParentCategory = category.parentId === null;
 
         return (
             <div key={category.id} className={`category-container ${isLeafCategory ? 'leaf-category' : ''}`}>
                 <button
                     className={`category-button ${isLeafCategory ? 'leaf-button' : ''}`}
-                    onClick={() => handleCategoryClick(category.id, isLeafCategory)}
+                    onClick={() => handleCategoryClick(category.id, isLeafCategory, isParentCategory)}
                 >
                     {category.name}
                 </button>
@@ -66,11 +77,11 @@ function Categories({ onLeafCategorySelect }) {
 
     return (
         <div className="element">
-        <div className="categories-container">
-            <div className="parent-categories">
-                {parentCategories.map(category => renderCategory(category))}
+            <div className="categories-container">
+                <div className="parent-categories">
+                    {parentCategories.map(category => renderCategory(category))}
+                </div>
             </div>
-        </div>
         </div>
     );
 }

@@ -4,13 +4,6 @@ using quizify.Models;
 
 namespace quizify.Data
 {
-    // Interface definition within the same file
-    public interface ITestQuestionRepository
-    {
-        Task<IEnumerable<TestQuestion>> GetTestsByCategoryAsync(int categoryId);
-        Task<TestQuestion> AddTestQuestionAsync(TestQuestion testQuestion);
-        Task<bool> SaveChangesAsync();
-    }
 
     // Implementation of the interface
     public class TestQuestionRepository : ITestQuestionRepository
@@ -25,7 +18,7 @@ namespace quizify.Data
         public async Task<IEnumerable<TestQuestion>> GetTestsByCategoryAsync(int categoryId)
         {
             return await _context.testquestions
-                .Where(t => t.category_id == categoryId)
+                .Where(t => t.Category_id == categoryId)
                 .ToListAsync();
         }
 

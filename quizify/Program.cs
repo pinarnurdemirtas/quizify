@@ -18,6 +18,7 @@ builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 builder.Services.AddScoped<ITestQuestionRepository, TestQuestionRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddAuthentication(options =>

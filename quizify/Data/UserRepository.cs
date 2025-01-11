@@ -4,16 +4,6 @@ using quizify.Models;
 
 namespace quizify.Data
 {
-    public interface IUserRepository
-    {
-        Task<User> GetUserByUsernameAsync(string username);
-        Task<User> GetUserByIdAsync(int id);
-        Task<bool> AddUserAsync(User user);
-        Task<bool> RemoveUserAsync(int id);
-        Task<bool> UpdateUserAsync(User user);
-
-        Task<bool> SaveChangesAsync();
-    }
 
     public class UserRepository : IUserRepository
     {
@@ -26,12 +16,12 @@ namespace quizify.Data
 
         public async Task<User> GetUserByUsernameAsync(string username)
         {
-            return await _context.users.SingleOrDefaultAsync(u => u.username == username);
+            return await _context.users.SingleOrDefaultAsync(u => u.Username == username);
         }
 
         public async Task<User> GetUserByIdAsync(int id)
         {
-            return await _context.users.SingleOrDefaultAsync(u => u.id == id);
+            return await _context.users.SingleOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task<bool> AddUserAsync(User user)
@@ -51,16 +41,16 @@ namespace quizify.Data
         
         public async Task<bool> UpdateUserAsync(User user)
         {
-            var existingUser = await GetUserByIdAsync(user.id);
+            var existingUser = await GetUserByIdAsync(user.Id);
             if (existingUser == null) return false;
 
-            existingUser.username = user.username;
-            existingUser.email = user.email;
-            existingUser.gender = user.gender; 
-            existingUser.name = user.name;
-            existingUser.surname = user.surname;
-            existingUser.department = user.department;
-            existingUser.phone = user.phone;
+            existingUser.Username = user.Username;
+            existingUser.Email = user.Email;
+            existingUser.Gender = user.Gender; 
+            existingUser.Name = user.Name;
+            existingUser.Surname = user.Surname;
+            existingUser.Department = user.Department;
+            existingUser.Phone = user.Phone;
 
             _context.users.Update(existingUser);
             return await SaveChangesAsync();

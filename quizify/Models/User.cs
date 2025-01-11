@@ -2,15 +2,15 @@ namespace quizify.Models
 {
     public class User
     {
-        public int id { get; set; }
-        public string username { get; set; }
-        public string password { get; set; }
-        public string name { get; set; }
-        public string surname { get; set; }
-        public string email { get; set; }
-        public string gender { get; set; }
-        public string department { get; set; }
-        public string img { get; set; }
-        public string phone { get; set; }  // Yeni telefon numarası alanı
+        public int Id { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string Email { get; set; }
+        public string Gender { get; set; }
+        public string Department { get; set; }
+        public string Img { get; set; }
+        public string Phone { get; set; }  
     }
 }

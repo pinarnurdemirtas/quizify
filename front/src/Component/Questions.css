@@ -1,74 +1,116 @@
-﻿/* Genel Konteyner */
+﻿.element_q {
+    padding: 10px;
+    background-color: #000000;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .container {
-    padding: 20px;
-    background-color: #010b2c; /* Açık gri arka plan */
-    border-radius: 10px; /* Yuvarlatılmış köşeler */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Hafif gölge */
-    position: relative; /* Butonları bu konteyner içinde hizalamak için */
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-/* Kategori Butonları (Doğru, Yanlış vs.) */
 .category-button-q {
-    color: #000000; /* Beyaz metin rengi */
-    background: linear-gradient(135deg, #6a11cb, #2575fc); /* Tıklama sırasında daha belirgin geçiş */
-    padding: 12px 18px; /* Genişletilmiş buton boyutu */
-    font-size: 16px;
-    border-radius: 10px; /* Yuvarlatılmış köşeler */
-    border: 1px solid #ccc; /* Açık gri border */
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1); /* Hafif gölgeler */
-    text-transform: capitalize;
-    transition: all 0.7s ease; /* Hover, tıklama ve focus geçiş efektleri */
-    width: 100%;
-    height: 52px;
+    background: linear-gradient(to left, #090909, #3533cd);
+    color: white;
+    border-radius: 8px;
+    text-transform: none;
+    font-weight: bold;
+    transition: transform 0.2s;
 }
 
-    .category-button-q:hover {
-        background: linear-gradient(135deg, #2575fc, #6a11cb); /* Hoverda mavi ve mor tonları arasında geçiş */
-        color: #ffffff; /* Beyaz metin rengi */
-        border-color: #2575fc; /* Sınır rengini mavi yap */
-        transform: scale(1.05); /* Hoverda büyütme efekti */
-        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2); /* Gölgeyi artır */
-    }
+.category-button-q:hover {
+    background: linear-gradient(to right, #090909, #3533cd);
+    transform: scale(1.05);
+}
 
- 
-    
+/* Styling for the question cards */
+.card-container {
+    margin-bottom: 20px;
+}
 
-/* Modal Stili */
-.modal {
+.card-container .MuiPaper-root {
+    padding: 15px;
+    border-radius: 12px;
+    transition: box-shadow 0.3s;
+}
+
+.card-container .MuiPaper-root:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.question-options div {
+    margin-bottom: 5px;
+}
+
+.add-button {
+    color: #3f51b5;
+    margin-right: 8px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.add-button:hover {
+    transform: scale(1.2);
+}
+
+.fixed-add-question {
+    position: fixed;
+    font-size: 12px;
+    top: 100px;
+    right: 40px;
+    max-height: 70px;
+    max-width: 110px;
+    z-index: 1000;
+    color: white;
+    background-color: #010b2c;
+    border-radius: 8px;
+    box-shadow: 0px 3px 10px rgba(211, 211, 211, 0.5);
+}
+
+.fixed-add-question:hover {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+}
+
+.modal-box {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 450px; /* Daha geniş modal */
-    background-color: #ffffff;
-    padding: 25px;
-    border-radius: 12px; /* Yuvarlatılmış köşeler */
-    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease; /* Modalda geçiş efekti */
+    width: 400px;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-    .modal:hover {
-        box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.3); /* Hoverda gölgeyi artır */
-    }
-
-/* Soru Kartı */
-.card {
-    margin-bottom: 20px;
-    padding: 20px; /* Daha geniş padding */
-    border-radius: 15px; /* Yuvarlak köşeler */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Gölgeleme */
-    transition: all 0.3s ease; /* Geçiş efekti */
+.modal-box .MuiTypography-h6 {
+    font-weight: bold;
+    margin-bottom: 16px;
 }
 
-    .card:hover {
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Hoverda daha belirgin gölge */
-        transform: translateY(-5px); /* Hoverda kartı hafif yükselt */
-    }
-.element {
-    overflow-y: scroll; /* Kaydırma aktif */
-    scrollbar-width: none; /* Firefox için */
+.modal-box .MuiTextField-root {
+    margin-bottom: 12px;
 }
 
-.element::-webkit-scrollbar {
-    display: none; /* Chrome, Safari ve Edge için */
+.modal-box button {
+    color: white;
+    background-color: #010b2c;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.modal-box button:hover {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+}
+
+.modal-box .MuiIconButton-root {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #757575;
+}
+
+.modal-box .MuiIconButton-root:hover {
+    color: #000;
 }

@@ -3,16 +3,6 @@ using quizify.Models;
 
 namespace quizify.Data
 {
-    // Define the IExamRepository interface
-    public interface IExamRepository
-    {
-        Task<Exam> CreateExamAsync(ExamRequest newExamRequest);
-        Task<Exam> GetExamByIdAsync(int id);
-        Task<IEnumerable<Exam>> GetExamsByUserIdAsync(int userId);
-        Task<bool> DeleteExamAsync(int id);
-        Task<string> UploadFileAsync(IFormFile file);
-    }
-
     // Implement the IExamRepository interface in the ExamRepository class
     public class ExamRepository : IExamRepository
     {
@@ -27,7 +17,7 @@ namespace quizify.Data
 
         public async Task<Exam> CreateExamAsync(ExamRequest newExamRequest)
         {
-            if (newExamRequest == null || newExamRequest.exam == null || newExamRequest.examQuestions == null)
+            if (newExamRequest == null || newExamRequest.exam == null || newExamRequest.exam_questions == null)
                 return null;
 
             // Create the Exam entity
@@ -40,14 +30,14 @@ namespace quizify.Data
             };
 
             // Add the exam to the database
-            _context.Exam.Add(newExam);
+            _context.exams.Add(newExam);
             await _context.SaveChangesAsync();
 
             // Add associated ExamQuestions to the database
-            foreach (var examQuestion in newExamRequest.examQuestions)
+            foreach (var examQuestion in newExamRequest.exam_questions)
             {
-                examQuestion.Exam_id = newExam.Id;
-                _context.ExamQuestions.Add(examQuestion);
+                examQuestion.ExamId = newExam.Id;
+                _context.exam_questions.Add(examQuestion);
             }
             await _context.SaveChangesAsync();
 
@@ -56,32 +46,32 @@ namespace quizify.Data
 
         public async Task<Exam> GetExamByIdAsync(int id)
         {
-            return await _context.Exam
+            return await _context.exams
                 .FirstOrDefaultAsync(e => e.Id == id);
         }
 
         public async Task<IEnumerable<Exam>> GetExamsByUserIdAsync(int userId)
         {
-            return await _context.Exam
+            return await _context.exams
                 .Where(e => e.User_id == userId)
                 .ToListAsync();
         }
 
         public async Task<bool> DeleteExamAsync(int id)
         {
-            var exam = await _context.Exam.FindAsync(id);
+            var exam = await _context.exams.FindAsync(id);
             if (exam == null)
             {
                 return false;
             }
 
-            _context.Exam.Remove(exam);
+            _context.exams.Remove(exam);
 
             // Remove related questions
-            var examQuestions = await _context.ExamQuestions
-                .Where(eq => eq.Exam_id == id)
+            var examQuestions = await _context.exam_questions
+                .Where(eq => eq.ExamId == id)
                 .ToListAsync();
-            _context.ExamQuestions.RemoveRange(examQuestions);
+            _context.exam_questions.RemoveRange(examQuestions);
 
             await _context.SaveChangesAsync();
             return true;

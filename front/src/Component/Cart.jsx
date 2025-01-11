@@ -12,63 +12,68 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
-import { generatePdf, uploadExamPdf } from '../services/pdf.jsx';
+import { generatePdf, uploadExamPdf, generateAnswerKeyPdf } from '../services/pdf.jsx';
 import { saveExam } from '../services/api';
 
 function Cart({ cartItems, open, onClose, onRemove }) {
-    const [shuffledItems, setShuffledItems] = useState(cartItems); // cartItems'ı ara state olarak al
+    const [shuffledItems, setShuffledItems] = useState(cartItems);
     const [openModal, setOpenModal] = useState(false);
     const [examName, setExamName] = useState('');
 
-
-    // Shuffle function
-    const shuffleItems = () => {
-        const shuffled = [...shuffledItems] // İlk başta soruları karıştır
-            .sort(() => Math.random() - 0.5) // Soruları karıştır
-
-        const shuffledWithOptions = shuffled.map(item => {
-            // Eğer şıklar varsa, şıkları da karıştır
-            if (item.options && Array.isArray(item.options)) {
-                const shuffledOptions = [...item.options].sort(() => Math.random() - 0.5); // Şıkları karıştır
-                return { ...item, options: shuffledOptions }; // Karışık şıkları item'e ekle
+    const groupByQuestionType = (items) => {
+        return items.reduce((groups, item) => {
+            const type = item.questionType || 'Diğer';
+            if (!groups[type]) {
+                groups[type] = [];
             }
-            return item; // Şık yoksa sadece öğeyi geri döndür
-        });
-
-        setShuffledItems(shuffledWithOptions); // Yeni karışık listeyi state'e at
+            groups[type].push(item);
+            return groups;
+        }, {});
     };
 
+    const shuffleItems = () => {
+        const shuffled = [...shuffledItems].sort(() => Math.random() - 0.5);
+        const shuffledWithOptions = shuffled.map(item => {
+            if (item.options && Array.isArray(item.options)) {
+                const shuffledOptions = [...item.options].sort(() => Math.random() - 0.5);
+                return { ...item, options: shuffledOptions };
+            }
+            return item;
+        });
+        setShuffledItems(shuffledWithOptions);
+    };
 
-    // cartItems değişirse shuffledItems'ı güncelle
     useEffect(() => {
         setShuffledItems(cartItems);
     }, [cartItems]);
-
 
     const handleComplete = async () => {
         if (!examName) {
             alert('Lütfen sınav adını girin.');
             return;
         }
-
         try {
             const { doc, examQuestions } = generatePdf(examName, shuffledItems);
             const pdfBlob = doc.output('blob');
-
             const user = JSON.parse(localStorage.getItem("user"));
-            const user_id = user ? user.id : null;
+            console.log(user); // Burada user objesini kontrol edin
+
+            const user_id = user.id;
             if (user_id) {
                 const examData = {
                     exam: {
                         id: 0,
                         user_id: user_id,
                         name: examName,
-                        created_at: new Date().toISOString(),
+                        pdf_url: pdfBlob,
+                        createdAt: new Date().toISOString(),
                     },
-                    examQuestions: examQuestions,
+                    exam_questions: examQuestions,
                 };
+                console.log('Gönderilen examData:', JSON.stringify(examData, null, 2));
 
                 const fileUrl = await uploadExamPdf(pdfBlob, examData);
+                console.log('Gönderilen url:', fileUrl);
 
                 await saveExam(examData);
                 window.open(fileUrl, '_blank');
@@ -78,7 +83,6 @@ function Cart({ cartItems, open, onClose, onRemove }) {
         } catch (error) {
             console.error("Sınav oluşturma hatası:", error.message);
         }
-
         setExamName('');
         setOpenModal(false);
     };
@@ -87,33 +91,44 @@ function Cart({ cartItems, open, onClose, onRemove }) {
     const handleCloseModal = () => setOpenModal(false);
     const handleExamNameChange = (event) => setExamName(event.target.value);
 
+    const handleGenerateAnswerKey = async () => {
+        try {
+            const { doc } = generateAnswerKeyPdf(shuffledItems);
+            const pdfBlob = doc.output('blob');
+            const url = URL.createObjectURL(pdfBlob);
+            window.open(url, '_blank');
+        } catch (error) {
+            console.error("Cevap anahtarı oluşturma hatası:", error.message);
+        }
+    };
+
+    const groupedItems = groupByQuestionType(shuffledItems);
 
     return (
         <Drawer anchor="right" open={open} onClose={onClose}>
-            <div style={{ width: 350, padding: 20 }}>
+            <div style={{ width: 800, padding: 20 }}>
                 <Box
                     sx={{
                         display: 'flex',
-                        alignItems: 'center', // Dikey hizalama
-                        justifyContent: 'space-between', // Aralarında boşluk bırakma
-                        marginBottom: '20px', // Altına biraz boşluk ekleyelim
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        marginBottom: '20px',
                     }}
                 >
-                    
                     <Button
                         variant="contained"
                         sx={{
                             background: 'linear-gradient(to left, #000000, #3533cd)',
                             color: 'white',
                             width: 'auto',
-                            marginLeft: '10px', // Biraz boşluk bırak
-                            marginRight: '10px', // İki yanda boşluk eşit olsun
+                            marginLeft: '10px',
+                            marginRight: '10px',
                             transition: 'background 0.5s',
                             '&:hover': {
                                 background: 'linear-gradient(to right, #000000, #3533cd)',
                             },
                         }}
-                        onClick={shuffleItems} // Karıştırma fonksiyonunu çağırır
+                        onClick={shuffleItems}
                     >
                         Soruları ve Şıkları Karıştır
                     </Button>
@@ -121,71 +136,86 @@ function Cart({ cartItems, open, onClose, onRemove }) {
                     <IconButton
                         onClick={onClose}
                         color="inherit"
-                        sx={{ position: 'relative' }} // Absolute yerine relative kullanalım
+                        sx={{ position: 'relative' }}
                     >
                         <CloseIcon />
                     </IconButton>
                 </Box>
 
+                {Object.entries(groupedItems).map(([type, items]) => (
+                    <div key={type}>
+                        <Typography variant="h6" gutterBottom>{type}</Typography>
+                        <List>
+                            {items.map((item) => (
+                                <ListItem key={item.id} style={{ marginBottom: '20px' }}>
+                                    <Card sx={{ width: '100%', padding: '10px', boxShadow: 'none' }}>
+                                        <CardContent>
+                                            <Typography variant="body1" gutterBottom>
+                                                {item.text}
+                                            </Typography>
+                                            {item.options && Array.isArray(item.options) && item.options.some(opt => opt !== undefined) ? (
+                                                <List>
+                                                    {item.options.map((option, index) => (
+                                                        option !== undefined ? (
+                                                            <ListItem key={index} style={{ paddingLeft: '0' }}>
+                                                                <Typography variant="body2">
+                                                                    {`${String.fromCharCode(65 + index)}. ${option}`}
+                                                                </Typography>
+                                                            </ListItem>
+                                                        ) : null
+                                                    ))}
+                                                </List>
+                                            ) : (
+                                                <Typography variant="body2" color="textSecondary">
+                                                </Typography>
+                                            )}
+                                        </CardContent>
+                                    </Card>
+                                    <ListItemSecondaryAction>
+                                        <IconButton onClick={() => onRemove(item.id)} color="error">
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </ListItemSecondaryAction>
+                                </ListItem>
+                            ))}
+                        </List>
+                    </div>
+                ))}
 
-
-                <List>
-                    {shuffledItems.map((item) => ( // shuffledItems'ı kullanıyoruz
-                        <ListItem key={item.id} style={{ marginBottom: '20px' }}>
-                            <Card sx={{ width: '100%', padding: '10px', boxShadow: 'none' }}>
-                                <CardContent>
-                                    <Typography variant="body1" gutterBottom>
-                                        {item.text}
-                                    </Typography>
-                                    {item.options && Array.isArray(item.options) && item.options.some(opt => opt !== undefined) ? (
-                                        <List>
-                                            {item.options.map((option, index) => (
-                                                option !== undefined ? (
-                                                    <ListItem key={index} style={{ paddingLeft: '0' }}>
-                                                        <Typography variant="body2">
-                                                            {`${String.fromCharCode(65 + index)}. ${option}`}
-                                                        </Typography>
-                                                    </ListItem>
-                                                ) : null
-                                            ))}
-                                        </List>
-                                    ) : (
-                                        <Typography variant="body2" color="textSecondary">
-                                        </Typography>
-                                    )}
-                                </CardContent>
-                            </Card>
-                            <ListItemSecondaryAction>
-                                <IconButton onClick={() => onRemove(item.id)} color="error">
-                                    <DeleteIcon />
-                                </IconButton>
-                            </ListItemSecondaryAction>
-                        </ListItem>
-                    ))}
-                </List>
-
-                
-
-                {/* Sınav Oluştur Button */}
                 <Button
                     variant="contained"
                     sx={{
-                        background: 'linear-gradient(to left, #000000, #3533cd)',
+                        background: 'linear-gradient(to left, #009900, #000000)',
                         color: 'white',
                         width: '100%',
                         marginTop: '10px',
                         transition: 'background 0.5s',
                         '&:hover': {
-                            background: 'linear-gradient(to left, #3533cd, #000000)',
+                            background: 'linear-gradient(to left, #000000, #009900)',
                         },
                     }}
-                    onClick={handleOpenModal} // Modal açma fonksiyonunu çağırır
+                    onClick={handleOpenModal}
                 >
                     Sınav Oluştur
                 </Button>
 
+                <Button
+                    variant="contained"
+                    sx={{
+                        background: 'linear-gradient(to left, #C80815, #000000)',
+                        color: 'white',
+                        width: '100%',
+                        marginTop: '10px',
+                        transition: 'background 0.5s',
+                        '&:hover': {
+                            background: 'linear-gradient(to left, #000000, #C80815)',
+                        },
+                    }}
+                    onClick={handleGenerateAnswerKey}
+                >
+                    Cevap Anahtarı Oluştur
+                </Button>
             </div>
-            {/* Modal - Sınav Adı Girme */}
             <Dialog open={openModal} onClose={handleCloseModal}>
                 <DialogTitle>Sınav Adı Belirle</DialogTitle>
                 <DialogContent>
