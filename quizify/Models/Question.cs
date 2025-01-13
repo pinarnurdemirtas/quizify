@@ -7,7 +7,7 @@ namespace quizify.Models
         public string Question_text { get; set; }  
         public string Answer { get; set; }  
         public int Category_id { get; set; }  
-        public bool IsApproved { get; set; }  // Yeni onay durumu ekleyin
+        public bool IsApproved { get; set; } 
 
         
         

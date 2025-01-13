@@ -50,7 +50,6 @@ export const updateUser = async (id, updatedUser) => {
     }
 };
 
-
 // Soruları almak için API çağrısı
 export const fetchQuestionsByCategory = async (categoryId) => {
     try {
@@ -72,15 +71,10 @@ export const addQuestion = async (questionData) => {
     });
 
     if (!response.ok) {
-        const errorText = await response.text();
-        console.log('Error response:', errorText); // Hata mesajını kontrol edin
         throw new Error('Soru eklenemedi!');
     }
-
-    return await response.json();
-
+    return 1;
 };
-
 
 // Test soruları için ayrı API çağrısı
 export const fetchTestQuestionsByCategory = async (categoryId) => {
@@ -107,14 +101,12 @@ export const addTestQuestion = async (testQuestionData) => {
         if (!response.ok) {
             throw new Error('Test sorusu eklenirken bir hata oluştu.');
         }
-        return await response.json();
+        return 1;
     } catch (err) {
         console.error(err);
         throw err;
     }
 };
-
-
 
 // PDF'yi sunucuya yüklemek için API çağrısı
 export const uploadPdf = async (pdfBlob) => {
@@ -133,6 +125,8 @@ export const uploadPdf = async (pdfBlob) => {
     }
 };
 
+
+
 // Sınav verisini kaydetmek için API çağrısı
 export const saveExam = async (examData) => {
     try {
@@ -149,7 +143,6 @@ export const saveExam = async (examData) => {
 
 };
 
-
 // Kategorileri almak için API çağrısı
 export const fetchCategories = async () => {
     try {
@@ -163,8 +156,6 @@ export const fetchCategories = async () => {
         throw new Error(err.message || 'Unknown error');
     }
 };
-
-
 
 // Sınavları almak için API çağrısı
 export const fetchExams = async (userId, token) => {
@@ -180,8 +171,6 @@ export const fetchExams = async (userId, token) => {
         throw new Error("Error fetching exams: " + error.message);
     }
 };
-
-
 
 // Sınav silmek için API çağrısı
 export const deleteExam = async (examId) => {

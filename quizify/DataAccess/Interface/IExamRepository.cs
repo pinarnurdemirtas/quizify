@@ -2,7 +2,6 @@ using quizify.Models;
 
 namespace quizify.Data;
 
-// Define the IExamRepository interface
 public interface IExamRepository
 {
     Task<Exam> CreateExamAsync(ExamRequest newExamRequest);

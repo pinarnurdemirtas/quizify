@@ -1,10 +1,13 @@
 using System.Security.Claims;
+using MailKit.Net.Smtp;
 using quizify.Models;
 using quizify.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit;
+using Microsoft.Extensions.Logging;
 
-namespace quizify.Controller
+namespace quizify.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -12,32 +15,36 @@ namespace quizify.Controller
     {
         private readonly IUserRepository _userRepository;
         private readonly Security _security;
+        private readonly ILogger<UsersController> _logger;
 
-        public UsersController(IUserRepository userRepository, Security security)
+        public UsersController(IUserRepository userRepository, Security security, ILogger<UsersController> logger)
         {
             _userRepository = userRepository;
             _security = security;
+            _logger = logger;
         }
 
-        // Kullanıcı giriş işlemi
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] Login loginUser)
         {
-            // Kullanıcıyı veritabanında buluyoruz
+            // Kullanıcı adı kontrolü
             var user = await _userRepository.GetUserByUsernameAsync(loginUser.Username);
 
-            if (user == null)
-                return Unauthorized(new { message = "Invalid username or password." });
-
-            // Şifreyi doğrulama
-            if (!BCrypt.Net.BCrypt.Verify(loginUser.Password, user.Password))
+            if (user == null || !BCrypt.Net.BCrypt.Verify(loginUser.Password, user.Password))
             {
-                return Unauthorized(new { message = "Invalid username or password." });
+                return Unauthorized(new { message = "Geçersiz kullanıcı adı veya şifre." });
             }
 
-            // JWT oluşturma
+            // Kullanıcı doğrulama durumu kontrolü
+            if (!user.IsVerified)
+            {
+                return Unauthorized(new { message = "Hesabınız doğrulanmamış." });
+            }
+
+            // Token oluşturma
             var token = _security.CreateToken(user);
 
+            // Giriş başarılı
             return Ok(new
             {
                 Token = token,
@@ -49,54 +56,123 @@ namespace quizify.Controller
                     user.Name,
                     user.Surname,
                     user.Gender,
+                    user.Document,
                     user.Department,
                     user.Img,
-                    user.Id,
-                    user.Password
+                    user.Id
                 }
             });
         }
 
-        // Kullanıcı kaydetme (Register)
+
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] User newUser)
         {
-            // Kullanıcı adı kontrolü
             var existingUser = await _userRepository.GetUserByUsernameAsync(newUser.Username);
             if (existingUser != null)
             {
                 return BadRequest("Kullanıcı adı zaten kullanılıyor.");
             }
 
-            // Şifreyi hash'le
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
-    
-            // Hash'lenmiş şifreyi kullanıcı objesine ata
             newUser.Password = hashedPassword;
+            newUser.IsVerified = false;
 
-            // Kullanıcıyı veritabanına ekle
             var result = await _userRepository.AddUserAsync(newUser);
             if (!result)
             {
+                _logger.LogError("Kullanıcı kaydedilirken bir hata oluştu.");
                 return StatusCode(500, "Kullanıcı kaydedilirken bir hata oluştu.");
             }
 
-            return Ok("Kullanıcı başarıyla kaydedildi.");
+            var userDocument = $"Ad Soyad: {newUser.Name} {newUser.Surname}\n" +
+                               $"Belge: {newUser.Document}\n";
+
+            var verificationUrl = $"http://localhost:5000/api/users/verify/{newUser.Username}";
+
+            await SendConfirmationEmail(newUser.Email, verificationUrl, userDocument);
+
+            return Ok("Kullanıcı başarıyla kaydedildi. Doğrulama e-postası gönderildi.");
         }
 
+        [HttpGet("verify/{username}")]
+        public async Task<IActionResult> VerifyUser(string username)
+        {
+            var user = await _userRepository.GetUserByUsernameAsync(username);
+            if (user == null)
+            {
+                return BadRequest("Kullanıcı bulunamadı.");
+            }
 
-        // Kullanıcı silme (Delete)
+            if (user.IsVerified)
+            {
+                return BadRequest("Kullanıcı zaten doğrulandı.");
+            }
+
+            user.IsVerified = true;
+            var result = await _userRepository.UpdateUserAsync(user);
+            if (!result)
+            {
+                _logger.LogError("Doğrulama işlemi sırasında bir hata oluştu.");
+                return StatusCode(500, "Doğrulama işlemi sırasında bir hata oluştu.");
+            }
+
+            await SendAccountVerifiedEmail(user.Email);
+
+            return Ok("Hesap Doğrulama Başarılı.");
+        }
+
+        private async Task SendConfirmationEmail(string userEmail, string verificationUrl, string userDocument)
+        {
+            var mimeMessage = new MimeMessage();
+            mimeMessage.From.Add(new MailboxAddress("QUIZIFY", "pncpnc979@gmail.com"));
+            mimeMessage.To.Add(new MailboxAddress("Pınar Nur", "pinardmrts18@gmail.com"));
+            mimeMessage.Subject = "Hesap Doğrulaması Gerekiyor";
+            mimeMessage.Body = new TextPart("plain")
+            {
+                Text = $"Hesabı doğrulamak için aşağıdaki bağlantıya tıklayın:\n\n{verificationUrl}\n\n{userDocument}"
+            };
+
+            using (var client = new SmtpClient())
+            {
+                await client.ConnectAsync("smtp.gmail.com", 587, false);
+                await client.AuthenticateAsync("pncpnc979@gmail.com", "vcrw lerx bgeb upgp");
+                await client.SendAsync(mimeMessage);
+                await client.DisconnectAsync(true);
+            }
+        }
+
+        private async Task SendAccountVerifiedEmail(string userEmail)
+        {
+            var mimeMessage = new MimeMessage();
+            mimeMessage.From.Add(new MailboxAddress("QUIZIFY", "pncpnc979@gmail.com"));
+            mimeMessage.To.Add(new MailboxAddress("Kullanıcı", userEmail));
+            mimeMessage.Subject = "Hesabınız Doğrulandı";
+            mimeMessage.Body = new TextPart("plain")
+            {
+                Text = "Hesabınız başarıyla doğrulandı. Artık giriş yapabilirsiniz."
+            };
+
+            using (var client = new SmtpClient())
+            {
+                await client.ConnectAsync("smtp.gmail.com", 587, false);
+                await client.AuthenticateAsync("pncpnc979@gmail.com", "vcrw lerx bgeb upgp");
+                await client.SendAsync(mimeMessage);
+                await client.DisconnectAsync(true);
+            }
+        }
+
+        [Authorize]
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Kullanıcı ID'sini al
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Ekstra yetki kontrolü
             if (userId != id.ToString())
             {
                 return Unauthorized("Bu işlemi yapmaya yetkiniz yok.");
             }
-    
+
             var result = await _userRepository.RemoveUserAsync(id);
             if (!result)
             {
@@ -105,9 +181,8 @@ namespace quizify.Controller
 
             return Ok("Kullanıcı başarıyla silindi.");
         }
-        
-        
-        // Kullanıcı bilgileri düzenleme (Update)
+
+     
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] User user)
         {

@@ -1,5 +1,5 @@
 .register-card {
-    width: 400px;
+    width: 500px;
     margin: 50px auto;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -61,4 +61,23 @@
 .register-button:hover {
     background: linear-gradient(to left, #3533cd, #000000); /* Sağdan sola geçiş */
     transform: translateY(-5px); /* Hoverda yukarı kayma efekti */
+}
+
+label {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: gray;
+    font-size: 14px;
+    transition: 0.3s ease-in-out;
+    pointer-events: none;
+}
+
+input:focus + label,
+input:not(:placeholder-shown) + label,
+.active-label {
+    top: -10px;
+    font-size: 12px;
+    color: #007bff; /* Odaklanıldığında maviye dönüşebilir */
 }

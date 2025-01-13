@@ -1,7 +1,7 @@
 ﻿import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../services/api";  
-import "./Login.css";
+import "./Css/Login.css";
 import {Token} from "@mui/icons-material";
 
 const Login = () => {
@@ -35,7 +35,7 @@ const Login = () => {
         <div className="login-card">
             <div className="login-form">
                 <h1 className="login-title">Hoş Geldiniz!</h1>
-                {error && <div className="error-message">{error}</div>}
+                {error && <div className="error-message">Giriş Hatalı</div>}
 
                 <form onSubmit={handleLogin}>
                     <input

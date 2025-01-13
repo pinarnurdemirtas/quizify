@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, Typography, Grid, Paper, Divider, Button, Box, Modal, TextField, IconButton, Alert } from '@mui/material';
+import { Card, CardContent, Typography, Grid, Paper, Divider, Button, Box, Modal, TextField, IconButton, Snackbar, Alert } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CloseIcon from '@mui/icons-material/Close';
 import { fetchQuestionsByCategory, fetchTestQuestionsByCategory, addQuestion, addTestQuestion } from '../services/api';
-import './Questions.css'; // CSS dosyasını dahil ettik
+import './Css/Questions.css'; 
 
 function Questions({ categoryId, handleAddToCart }) {
     const [questions, setQuestions] = useState([]);
@@ -11,18 +11,18 @@ function Questions({ categoryId, handleAddToCart }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
 
     const [openModal, setOpenModal] = useState(false);
     const [newQuestion, setNewQuestion] = useState({
         question_text: '',
         question_type: '',
         category_id: categoryId,
-        Answer: '', // Answer alanını ekledik
+        Answer: '', 
     });
 
-    const [answerError, setAnswerError] = useState(false); // Error state'i ekliyoruz
+    const [answerError, setAnswerError] = useState(false); 
 
-    // API'den veri çekme işlemi
     useEffect(() => {
         if (!categoryId) return;
         setLoading(true);
@@ -31,7 +31,11 @@ function Questions({ categoryId, handleAddToCart }) {
         const getQuestions = async () => {
             try {
                 const fetchedQuestions = await fetchQuestionsByCategory(categoryId);
-                setQuestions(fetchedQuestions);
+                const validQuestions = fetchedQuestions.map(q => ({
+                    ...q,
+                    question_type: q.question_type || 'default',
+                }));
+                setQuestions(validQuestions);
             } catch (err) {
                 setError(err.message);
             }
@@ -40,7 +44,7 @@ function Questions({ categoryId, handleAddToCart }) {
         const getTestQuestions = async () => {
             try {
                 const fetchedTestQuestions = await fetchTestQuestionsByCategory(categoryId);
-                setTestQuestions(fetchedTestQuestions);
+                setTestQuestions(fetchedTestQuestions || []);
                 setLoading(false);
             } catch (err) {
                 setError(err.message);
@@ -52,24 +56,24 @@ function Questions({ categoryId, handleAddToCart }) {
         getTestQuestions();
     }, [categoryId]);
 
+
     const categorizedQuestions = {
-        Klasik: questions.filter((q) => q.question_type === 'Klasik'),
-        DogruYanlis: questions.filter((q) => q.question_type === 'Doğru-Yanlış'),
-        BoslukDoldurma: questions.filter((q) => q.question_type === 'Boşluk Doldurma'),
+        Klasik: questions.filter((q) => q.question_type === 'klasik'),
+        DogruYanlıs: questions.filter((q) => q.question_type === 'dogruyanlıs'),
+        BoslukDoldurma: questions.filter((q) => q.question_type === 'boslukdoldurma'),
         Test: testQuestions,
     };
 
     const categories = Object.keys(categorizedQuestions);
 
-    // Kategoriyi seçme işlemi
     const handleCategoryClick = (category) => {
-        setSelectedCategory(category === selectedCategory ? null : category); // Tıklanan kategori zaten seçiliyse, kaldır
+        setSelectedCategory(category === selectedCategory ? null : category); 
     };
 
     const handleOpenModal = () => {
         setNewQuestion((prev) => ({
             ...prev,
-            question_type: selectedCategory.toLowerCase(),
+            question_type: selectedCategory ? selectedCategory.toLowerCase() : 'default',
         }));
         setOpenModal(true);
     };
@@ -77,11 +81,11 @@ function Questions({ categoryId, handleAddToCart }) {
     const handleCloseModal = () => setOpenModal(false);
 
     const handleAddQuestion = async () => {
-        if (!newQuestion.Answer) { // Answer alanı boşsa
-            setAnswerError(true); // Error mesajını göster
+        if (!newQuestion.Answer) { 
+            setAnswerError(true); 
             return;
         }
-        setAnswerError(false); // Erroru sıfırlıyoruz
+        setAnswerError(false); 
 
         try {
             let addedQuestion;
@@ -94,7 +98,7 @@ function Questions({ categoryId, handleAddToCart }) {
                     Op3: newQuestion.Op3 || '',
                     Op4: newQuestion.Op4 || '',
                     Op5: newQuestion.Op5 || '',
-                    Answer: newQuestion.Answer || '', // Answer alanını ekledik
+                    Answer: newQuestion.Answer || '', 
                 });
                 console.log("Test Question Added: ", addedQuestion);
                 setTestQuestions([...testQuestions, addedQuestion]);
@@ -103,13 +107,27 @@ function Questions({ categoryId, handleAddToCart }) {
                 console.log("Normal Question Added: ", addedQuestion);
                 setQuestions([...questions, addedQuestion]);
             }
-            handleCloseModal();
-            setNewQuestion({ question_text: '', question_type: '', category_id: categoryId, Answer: '' }); // Answer'ı sıfırlıyoruz
+
+            setSnackbar({
+                open: true,
+                message: 'Soru ekleme isteğiniz başarıyla ileildi!',
+                severity: 'success',
+            });
+
+            setTimeout(() => {
+                handleCloseModal();
+            }, 1000);
+
+            setNewQuestion({ question_text: '', question_type: '', category_id: categoryId, Answer: '' });
+
         } catch (err) {
             setError(err.message);
         }
     };
-
+    
+    const handleCloseSnackbar = () => {
+        setSnackbar({ ...snackbar, open: false });
+    };
 
     if (loading) return <div>Loading questions...</div>;
     if (error) return <div>Error: {error}</div>;
@@ -127,14 +145,13 @@ function Questions({ categoryId, handleAddToCart }) {
                                 onClick={() => handleCategoryClick(category)}
                                 className="category-button-q"
                             >
-                                {category} {/* Başlıkları sadece kategori ismi olarak yaz */}
+                                {category} 
                             </Button>
                         </Grid>
                     ))}
                 </Grid>
                 <Divider sx={{ marginY: 2 }} />
 
-                {/* Seçilen kategoriye ait soruları listeleme */}
                 <Box className="element" sx={{ maxHeight: 'calc(100vh - 200px)' }}>
                     {(selectedCategory ? [selectedCategory] : categories).map((category) => (
                         <div key={category}>
@@ -180,7 +197,6 @@ function Questions({ categoryId, handleAddToCart }) {
                     ))}
                 </Box>
 
-                {/* Yeni soru ekleme butonu */}
                 {selectedCategory && (
                     <Button
                         variant="contained"
@@ -208,7 +224,6 @@ function Questions({ categoryId, handleAddToCart }) {
                     </Button>
                 )}
 
-                {/* Modal (Yeni Soru Ekleme) */}
                 <Modal
                     open={openModal}
                     onClose={handleCloseModal}
@@ -319,6 +334,20 @@ function Questions({ categoryId, handleAddToCart }) {
                         </Button>
                     </Box>
                 </Modal>
+
+                <Snackbar
+                    open={snackbar.open}
+                    autoHideDuration={4000}
+                    onClose={handleCloseSnackbar}
+                >
+                    <Alert
+                        onClose={handleCloseSnackbar}
+                        severity={snackbar.severity}
+                        sx={{ width: '100%' }}
+                    >
+                        {snackbar.message}
+                    </Alert>
+                </Snackbar>
             </div>
         </div>
     );

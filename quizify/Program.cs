@@ -6,7 +6,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Veritabanı bağlamını ekle
 builder.Services.AddDbContext<QuizifyDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -46,13 +45,11 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Diğer servisleri ekliyoruz
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerGen(c =>
 {
-    // Swagger'a JWT Authentication ekliyoruz
     c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
         In = Microsoft.OpenApi.Models.ParameterLocation.Header,
@@ -63,7 +60,6 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "bearer"
     });
 
-    // Swagger'a güvenlik gereksinimi ekliyoruz
     c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
     {
         {
@@ -82,7 +78,6 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Swagger ve middleware kullanımı
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -90,8 +85,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseCors("AllowAll");
  app.UseStaticFiles();
-app.UseAuthentication(); // Kimlik doğrulama
-app.UseAuthorization();  // Yetkilendirme
-
+app.UseAuthentication(); 
+app.UseAuthorization();  
 app.MapControllers();
 app.Run();

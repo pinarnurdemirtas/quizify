@@ -1,28 +1,51 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "../services/api.jsx"; 
-import "./Register.css"; 
+import { registerUser, uploadPdf } from "../services/api.jsx";
+import "./Css/Register.css";
 
 const Register = () => {
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
     const [email, setEmail] = useState("");
-    const [department, setDepartment] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [gender, setGender] = useState("");
     const [phone, setPhone] = useState("");
+    const [pdfFile, setPdfFile] = useState(null);
+    const [department, setDepartment] = useState("");
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
     const handleRegister = async (e) => {
         e.preventDefault();
+
+        if (!gender) {
+            setError("Lütfen cinsiyetinizi seçin.");
+            return;
+        }
+
+        // PDF dosyasını yükle
+        let document = null;
+        if (pdfFile) {
+            if (pdfFile.type !== "application/pdf") {
+                setError("Lütfen geçerli bir PDF dosyası yükleyin.");
+                return;
+            }
+            try {
+                document = await uploadPdf(pdfFile); // PDF yükle ve URL al
+            } catch (error) {
+                console.error('Error uploading PDF:', error);
+                alert("PDF yükleme sırasında hata oluştu.");
+                return;
+            }
+        }
+
         const img =
             gender === "male"
                 ? "https://api.dicebear.com/8.x/adventurer/svg?seed=Cuddles&flip=true"
                 : gender === "female"
                     ? "https://api.dicebear.com/8.x/adventurer/svg?seed=Cookie&flip=true"
-                    : ""; 
+                    : "";
 
         const payload = {
             name,
@@ -31,23 +54,26 @@ const Register = () => {
             username,
             password,
             phone,
-            department,
             gender,
             img,
+            department,
+            document,
+            isVerified: true,
         };
-        console.log(payload); 
-        try {
-            const response = await registerUser(payload); 
-            console.log('Registration successful:', response);
-            navigate("/"); 
-        } catch (error) {
-            console.error('Registration failed:', error.message);
 
-            if (error.response && error.response.data && error.response.data.errors) {
-                console.error('Validation Errors:', error.response.data.errors);
-            } else {
-                console.error('Error details:', error.response);
-            }
+        if (!pdfFile) {
+            setError("Lütfen öğretmenlik belgenizi PDF formatında yükleyin.");
+            return;
+        }
+
+        try {
+            const response = await registerUser(payload); // Kullanıcıyı kaydet
+            console.log('Registration successful:', response);
+            alert("Hesabınız doğrulandığında mail alacaksınız.");
+            navigate("/");
+        } catch (error) {
+            console.error('Registration failed:', error.response.data);
+            setError(error.response.data);
         }
     };
 
@@ -59,6 +85,7 @@ const Register = () => {
 
                 <form onSubmit={handleRegister}>
                     <div className="input-pair">
+                        <label className={username ? "active-label" : ""}>Kullanıcı Adı</label>
                         <input
                             type="text"
                             placeholder="Kullanıcı Adı"
@@ -133,8 +160,21 @@ const Register = () => {
                             <option value="other">Other</option>
                         </select>
                     </div>
-
-                    <button type="submit" className="register-button">Kayıt Ol</button>
+                    <div className="input-pair" style={{ paddingLeft: 12 }}>
+                        <input
+                            type="file"
+                            accept=".pdf"
+                            onChange={(e) => setPdfFile(e.target.files[0])}
+                            className="input-field"
+                        />
+                        <p>Lütfen öğretmenlik belgenizi PDF formatında yükleyin.</p>
+                    </div>
+                    <button
+                        type="submit"
+                        className="register-button"
+                    >
+                        Kayıt Ol
+                    </button>
                 </form>
             </div>
         </div>

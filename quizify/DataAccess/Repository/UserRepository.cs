@@ -49,8 +49,10 @@ namespace quizify.Data
             existingUser.Gender = user.Gender; 
             existingUser.Name = user.Name;
             existingUser.Surname = user.Surname;
-            existingUser.Department = user.Department;
+            existingUser.Document = " ";
             existingUser.Phone = user.Phone;
+            existingUser.Department = user.Department;
+
 
             _context.users.Update(existingUser);
             return await SaveChangesAsync();

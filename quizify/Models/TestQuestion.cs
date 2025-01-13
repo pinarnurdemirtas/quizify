@@ -11,6 +11,7 @@ namespace quizify.Models
         public string Op4 { get; set; }  
         public string Op5 { get; set; } 
         public string Answer { get; set; }  
-        
+        public bool IsApproved { get; set; }  
+
     }
 }

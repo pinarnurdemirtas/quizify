@@ -7,7 +7,7 @@ import Profile from "./Profile";
 import Questions from "./Questions";
 import Cart from "./Cart";
 import Exams from "./Exams.jsx";
-import "./Home.css";
+import "./Css/Home.css";
 
 const HomePage = () => {
     const [currentPage, setCurrentPage] = useState("questions");
@@ -147,7 +147,6 @@ const HomePage = () => {
                     disableEnforceFocus: true,
                 }}
             />
-
             <Snackbar
                 open={snackbar.open}
                 autoHideDuration={3000}

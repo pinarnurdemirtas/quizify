@@ -21,15 +21,15 @@ const Exam = () => {
     useEffect(() => {
         const getExams = async () => {
             try {
-                const examsData = await fetchExams(userId);  // fetchExams fonksiyonunu burada çağır
-                setExams(examsData);  // Veriyi state'e kaydet
+                const examsData = await fetchExams(userId);  
+                setExams(examsData);  
             } catch (error) {
                 console.error("Error fetching exams:", error);
             }
         };
 
-        getExams();  // API çağrısını tetikle
-    }, [userId]);  // userId değiştiğinde tekrar çağrı yapılır
+        getExams();  
+    }, [userId]);  
 
     const handleExamClick = (examId) => {
         const selected = exams.find((exam) => exam.id === examId);
@@ -108,7 +108,6 @@ const Exam = () => {
                 ))}
             </Grid>
 
-            {/* Modal Bileşeni */}
             <Dialog open={openModal} onClose={handleCloseModal}>
                 <DialogTitle>{selectedExam?.name}</DialogTitle>
                 <DialogContent>

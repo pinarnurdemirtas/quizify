@@ -1,22 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-    Card,
-    CardContent,
-    Typography,
-    IconButton,
-    Grid,
-    Avatar,
-    Button,
-    TextField,
-    Snackbar,
-    Modal,
-    Alert
-} from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import { updateUser, deleteUser } from "../services/api"; // updateUser fonksiyonu import edilmiştir.
-import "./Profile.css";
-
+import { Card, CardContent, Typography, Grid, Avatar, Button, TextField, Snackbar, Alert } from "@mui/material";
+import { updateUser, deleteUser } from "../services/api";
+import "./Css/Profile.css";
 
 const Profile = () => {
     const navigate = useNavigate();
@@ -24,7 +10,6 @@ const Profile = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [updatedUser, setUpdatedUser] = useState({ ...user });
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
-
 
     useEffect(() => {
         if (!user) {
@@ -40,7 +25,11 @@ const Profile = () => {
                 localStorage.removeItem("user");
                 navigate("/");
             } catch (error) {
-                alert(`Hata: ${error}`);
+                setSnackbar({
+                    open: true,
+                    message: `Hesap silme hatası: ${error.message || error}`,
+                    severity: 'error',
+                });
             }
         }
     };
@@ -58,9 +47,19 @@ const Profile = () => {
     };
 
     const handleSaveChanges = async () => {
+        if (!updatedUser.id) {
+            setSnackbar({
+                open: true,
+                message: "User ID is missing.",
+                severity: 'error',
+            });
+            return;
+        }
+
         const completeUpdatedUser = {
             id: user.id,
-            password: updatedUser.password,
+            password: " ",
+            document: updatedUser.document,
             username: updatedUser.username,
             email: updatedUser.email,
             gender: updatedUser.gender,
@@ -68,10 +67,9 @@ const Profile = () => {
             surname: updatedUser.surname,
             department: updatedUser.department,
             phone: updatedUser.phone,
+            isVerified: true,
             img: updatedUser.img,
         };
-
-        console.log(completeUpdatedUser); 
 
         try {
             const updatedData = await updateUser(user.id, completeUpdatedUser);
@@ -90,14 +88,13 @@ const Profile = () => {
                 message: `Profil güncelleme hatası: ${errorMessage}`,
                 severity: 'error',
             });
-          
         }
     };
 
     const handleCloseSnackbar = () => {
         setSnackbar({ ...snackbar, open: false });
     };
-    
+
     if (!user) {
         return null;
     }
@@ -127,11 +124,9 @@ const Profile = () => {
                                             readOnly: !isEditing,
                                         }}
                                     />
-                                    <IconButton className="edit-icon" onClick={handleEditToggle}>
-                                        <EditIcon />
-                                    </IconButton>
                                 </div>
-                            ))}                        </Grid>
+                            ))}
+                        </Grid>
                         <Grid item xs={12} sm={6}>
                             <div className="profile-info">
                                 {["email", "gender", "department", "phone"].map((field) => (
@@ -148,15 +143,20 @@ const Profile = () => {
                                                 readOnly: !isEditing,
                                             }}
                                         />
-                                        <IconButton className="edit-icon" onClick={handleEditToggle}>
-                                            <EditIcon />
-                                        </IconButton>
                                     </div>
                                 ))}
                             </div>
                         </Grid>
                     </Grid>
                     <div className="save-changes-button-container">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            className="save-changes-button"
+                            onClick={handleEditToggle}
+                        >
+                            {isEditing ? "Cancel Edit" : "Edit Profile"}
+                        </Button>
                         {isEditing && (
                             <Button
                                 variant="contained"
@@ -182,7 +182,7 @@ const Profile = () => {
             </Card>
             <Snackbar
                 open={snackbar.open}
-                autoHideDuration={1000}
+                autoHideDuration={3000}
                 onClose={handleCloseSnackbar}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                 sx={{ zIndex: 1500 }}

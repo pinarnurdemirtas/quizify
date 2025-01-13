@@ -71,7 +71,7 @@ namespace quizify.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Exam");
+                    b.ToTable("exams");
                 });
 
             modelBuilder.Entity("quizify.Models.ExamQuestions", b =>
@@ -82,67 +82,21 @@ namespace quizify.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Created_at")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("Exam_id")
+                    b.Property<int>("ExamId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Question_id")
+                    b.Property<int?>("QuestionId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("TestQuestionId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ExamQuestions");
-                });
-
-            modelBuilder.Entity("quizify.Models.Kisi", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
-
-                    b.Property<string>("department")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("gender")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("img")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("password")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("phone")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("surname")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("username")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("id");
-
-                    b.ToTable("users");
+                    b.ToTable("exam_questions");
                 });
 
             modelBuilder.Entity("quizify.Models.Question", b =>
@@ -153,8 +107,15 @@ namespace quizify.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Answer")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("Category_id")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Question_text")
                         .IsRequired()
@@ -169,40 +130,100 @@ namespace quizify.Migrations
                     b.ToTable("questions");
                 });
 
-            modelBuilder.Entity("quizify.Models.Test", b =>
+            modelBuilder.Entity("quizify.Models.TestQuestion", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("category_id")
+                    b.Property<string>("Answer")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Category_id")
                         .HasColumnType("integer");
 
-                    b.Property<string>("op1")
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Op1")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("op2")
+                    b.Property<string>("Op2")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("op3")
+                    b.Property<string>("Op3")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("op4")
+                    b.Property<string>("Op4")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("question_text")
+                    b.Property<string>("Op5")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("id");
+                    b.Property<string>("Question_text")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
 
                     b.ToTable("testquestions");
+                });
+
+            modelBuilder.Entity("quizify.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Department")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Img")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("users");
                 });
 
             modelBuilder.Entity("Categories", b =>

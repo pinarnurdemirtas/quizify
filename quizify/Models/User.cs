@@ -9,8 +9,10 @@ namespace quizify.Models
         public string Surname { get; set; }
         public string Email { get; set; }
         public string Gender { get; set; }
-        public string Department { get; set; }
+        public string Document { get; set; }
         public string Img { get; set; }
+        public string Department { get; set; }
         public string Phone { get; set; }  
+        public Boolean IsVerified  { get; set; }
     }
 }

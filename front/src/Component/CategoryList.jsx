@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchCategories } from '../services/api.jsx';
-import './Categorylist.css';
+import './Css/Categorylist.css';
 
 function Categories({ onLeafCategorySelect }) {
     const [categories, setCategories] = useState([]);
