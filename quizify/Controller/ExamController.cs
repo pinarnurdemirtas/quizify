@@ -7,7 +7,6 @@ namespace quizify.Controller
 {
     [ApiController]
     [Route("api/[controller]")]
-    
     public class ExamController : ControllerBase
     {
         private readonly IExamRepository _examRepository;

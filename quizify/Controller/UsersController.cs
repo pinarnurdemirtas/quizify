@@ -64,7 +64,6 @@ namespace quizify.Controllers
             });
         }
 
-
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] User newUser)
         {
@@ -89,8 +88,9 @@ namespace quizify.Controllers
                                $"Belge: {newUser.Document}\n";
 
             var verificationUrl = $"http://localhost:5000/api/users/verify/{newUser.Username}";
+            var rejectUrl = $"http://localhost:5000/api/users/reject/{newUser.Username}";
 
-            await SendConfirmationEmail(newUser.Email, verificationUrl, userDocument);
+            await SendConfirmationEmail(newUser.Email, verificationUrl, userDocument, rejectUrl);
 
             return Ok("Kullanıcı başarıyla kaydedildi. Doğrulama e-postası gönderildi.");
         }
@@ -122,7 +122,26 @@ namespace quizify.Controllers
             return Ok("Hesap Doğrulama Başarılı.");
         }
 
-        private async Task SendConfirmationEmail(string userEmail, string verificationUrl, string userDocument)
+        [HttpGet("reject/{username}")]
+        public async Task<IActionResult> RejectUser(string username)
+        {
+            var user = await _userRepository.GetUserByUsernameAsync(username);
+            if (user == null)
+            {
+                return BadRequest("Kullanıcı bulunamadı.");
+            }
+
+            // Kullanıcıyı silme işlemi
+            var result = await _userRepository.RemoveUserAsync(user.Id);
+            if (!result)
+            {
+                return StatusCode(500, "Kullanıcı reddedilirken bir hata oluştu.");
+            }
+
+            return Ok("Kullanıcı başarıyla reddedildi ve silindi.");
+        }
+
+        private async Task SendConfirmationEmail(string userEmail, string verificationUrl, string userDocument, string rejectUrl)
         {
             var mimeMessage = new MimeMessage();
             mimeMessage.From.Add(new MailboxAddress("QUIZIFY", "pncpnc979@gmail.com"));
@@ -130,7 +149,7 @@ namespace quizify.Controllers
             mimeMessage.Subject = "Hesap Doğrulaması Gerekiyor";
             mimeMessage.Body = new TextPart("plain")
             {
-                Text = $"Hesabı doğrulamak için aşağıdaki bağlantıya tıklayın:\n\n{verificationUrl}\n\n{userDocument}"
+                Text = $"Hesabı doğrulamak için aşağıdaki bağlantıya tıklayın:\n\n{verificationUrl}\n\nAyrıca, hesabı reddetmek için: {rejectUrl}\n\n{userDocument}"
             };
 
             using (var client = new SmtpClient())
@@ -166,13 +185,6 @@ namespace quizify.Controllers
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (userId != id.ToString())
-            {
-                return Unauthorized("Bu işlemi yapmaya yetkiniz yok.");
-            }
-
             var result = await _userRepository.RemoveUserAsync(id);
             if (!result)
             {
@@ -182,7 +194,6 @@ namespace quizify.Controllers
             return Ok("Kullanıcı başarıyla silindi.");
         }
 
-     
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] User user)
         {

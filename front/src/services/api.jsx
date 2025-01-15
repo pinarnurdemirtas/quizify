@@ -32,10 +32,15 @@ export const registerUser = async (payload) => {
 //Hesap silme API çağrısı
 export const deleteUser = async (id) => {
     try {
-        const response = await axios.delete(`${URL}/Register/delete/${id}`);
+        const token = localStorage.getItem('token');
+        const response = await axios.delete(`${URL}/Users/delete/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },});
         return response.data;
     } catch (error) {
-        throw error.response ? error.response.data : error.message;
+        console.error("Error response:", error.response);  // Hata cevabını yazdır
+        throw error.response.data;
     }
 };
 

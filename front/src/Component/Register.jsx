@@ -23,8 +23,6 @@ const Register = () => {
             setError("Lütfen cinsiyetinizi seçin.");
             return;
         }
-
-        // PDF dosyasını yükle
         let document = null;
         if (pdfFile) {
             if (pdfFile.type !== "application/pdf") {

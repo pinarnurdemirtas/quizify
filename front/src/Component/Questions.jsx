@@ -85,8 +85,7 @@ function Questions({ categoryId, handleAddToCart }) {
             setAnswerError(true); 
             return;
         }
-        setAnswerError(false); 
-
+        setAnswerError(false);
         try {
             let addedQuestion;
             if (newQuestion.question_type === 'test') {
@@ -107,19 +106,15 @@ function Questions({ categoryId, handleAddToCart }) {
                 console.log("Normal Question Added: ", addedQuestion);
                 setQuestions([...questions, addedQuestion]);
             }
-
             setSnackbar({
                 open: true,
                 message: 'Soru ekleme isteğiniz başarıyla ileildi!',
                 severity: 'success',
             });
-
             setTimeout(() => {
                 handleCloseModal();
             }, 1000);
-
             setNewQuestion({ question_text: '', question_type: '', category_id: categoryId, Answer: '' });
-
         } catch (err) {
             setError(err.message);
         }

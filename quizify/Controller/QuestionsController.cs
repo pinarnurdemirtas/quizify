@@ -78,7 +78,6 @@ namespace quizify.Controller
             {
                 return NotFound("Soru bulunamadı veya zaten onaylanmış.");
             }
-
             return Ok("Soru başarıyla onaylandı.");
         }
     }

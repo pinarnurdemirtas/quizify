@@ -17,6 +17,8 @@ const Profile = () => {
         }
     }, [user, navigate]);
 
+    console.log("user", user); // user nesnesini kontrol edin
+
     const handleDeleteAccount = async () => {
         if (window.confirm("Hesabınızı silmek istediğinize emin misiniz?")) {
             try {

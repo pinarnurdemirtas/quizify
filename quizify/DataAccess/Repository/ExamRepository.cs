@@ -60,7 +60,6 @@ namespace quizify.Data
             {
                 return false;
             }
-
             _context.exams.Remove(exam);
 
             var examQuestions = await _context.exam_questions
@@ -74,25 +73,38 @@ namespace quizify.Data
 
         public async Task<string> UploadFileAsync(IFormFile file)
         {
+            // Eğer dosya null ise veya boyutu 0 ise geçersizdir, null döndür.
             if (file == null || file.Length == 0)
                 return null;
-
+            
+            // Yükleme yapılacak klasör yolunu belirle ("wwwroot/uploads").
             var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
+            // Eğer bu klasör yoksa, oluştur.
             if (!Directory.Exists(uploadsFolder))
             {
                 Directory.CreateDirectory(uploadsFolder);
             }
-
+            
+            // Dosya adı için benzersiz bir ad oluştur ve dosya uzantısını koru.
             var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+            
+            // Dosyanın tam yolunu belirle.
             var filePath = Path.Combine(uploadsFolder, fileName);
-
+            
+            // Dosyayı belirtilen yola kaydetmek için bir dosya akışı (stream) oluştur.
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
+                // Dosyayı asenkron olarak hedef akışa kopyala.
                 await file.CopyToAsync(stream);
             }
-
+            
+            // HTTP isteğinden protokol (http/https) ve host bilgisini al.
             var request = _httpContextAccessor.HttpContext.Request;
+            
+            // Dosya URL'sini oluştur (örneğin: http://localhost:5000/uploads/{fileName}).
             var fileUrl = $"{request.Scheme}://{request.Host}/uploads/{fileName}";
+            
+            // Dosyanın URL'sini döndür.
             return fileUrl;
         }
     }
